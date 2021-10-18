@@ -18,6 +18,7 @@ public class GoButton : MonoBehaviour
 
     bool canClick;
     public RectTransform rectTransform;
+    public DraftBoard board;
     Vector3 originPos;
     Quaternion originRot;
     Vector3 originScale;
@@ -65,7 +66,8 @@ public class GoButton : MonoBehaviour
     public void OnPointerDown(PointerEventData eventData)
     {
         image.color = onPressColor;
-        canClick = true;
+        if(!board.IsEmpty())
+            canClick = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -73,7 +75,7 @@ public class GoButton : MonoBehaviour
         //Launch draft board methods
         if(canClick)
         {
-            //
+            board.CreateStory();
         }
 
         image.color = Color.white;

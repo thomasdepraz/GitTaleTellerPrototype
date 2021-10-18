@@ -30,6 +30,7 @@ public class Card : MonoBehaviour
 
     List<RaycastResult> results = new List<RaycastResult>();
     GameObject cachedObject;
+    List<GameObject> cachedObjects = new List<GameObject>();
     bool interacting = false;
     bool pointerDown;
     PointerEventData currentData;
@@ -43,19 +44,40 @@ public class Card : MonoBehaviour
             {
                 //Start RayCasting for underneathObjects
                 EventSystem.current.RaycastAll(currentData, results);
-                if (results.Count > 1 && (!interacting || cachedObject!=results[1].gameObject) )
+                /*if (results.Count > 1 && (!interacting || cachedObject!=results[1].gameObject) )
                 {
                     //Execute Event On Underneath Object
                     interacting = true;
                     cachedObject = results[1].gameObject;
                     ExecuteEvents.Execute(results[1].gameObject, currentData, ExecuteEvents.pointerEnterHandler);
+
+                    for (int i = 1; i < results.Count; i++)
+                    {
+                        cachedObjects.Add(results[i].gameObject);
+                    }
                 }
                 if (results.Count == 1 && interacting)
                 {
                     interacting = false;
                     ExecuteEvents.Execute(cachedObject, currentData, ExecuteEvents.pointerExitHandler);
                     cachedObject = null;
+                }*/
+                print(results.Count);
+                if(cachedObjects.Count < results.Count - 1)
+                {
+                    cachedObjects.Add(results[results.Count - 1].gameObject);
+                    ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerEnterHandler);
                 }
+                else if(cachedObjects.Count > results.Count-1)
+                {
+                    int difference = cachedObjects.Count - (results.Count - 1);
+                    for (int i = 0; i < difference; i++)
+                    {
+                        ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerExitHandler);
+                        cachedObjects.RemoveAt(cachedObjects.Count - 1);
+                    }
+                }
+
             }
         }
     }

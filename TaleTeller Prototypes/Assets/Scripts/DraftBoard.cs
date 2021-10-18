@@ -39,5 +39,15 @@ public class DraftBoard : MonoBehaviour
         }
     }
 
+    public bool IsEmpty()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].currentPlacedCard != null)
+                return false;
+        }
+        return true;
+    }
+
 
 }
