@@ -8,7 +8,23 @@ public class DraftSlot : MonoBehaviour
      , IPointerEnterHandler
      , IPointerExitHandler
 {
-    public Card currentPlacedCard;
+    Card _currentPlacedCard;
+    public Card currentPlacedCard
+    { 
+        get => _currentPlacedCard;
+        set
+        {
+            _currentPlacedCard = value;
+            if(value == null)
+            {
+                image.sprite = defaultSprite;
+            }
+            else
+            {
+                image.sprite = hoveredSprite;
+            }
+        }        
+    }
     public CanvasGroup canvasGroup;
 
     [Header("Sprites")]

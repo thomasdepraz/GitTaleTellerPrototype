@@ -29,11 +29,11 @@ public class Card : MonoBehaviour
     delegate void UIEvent();
 
     List<RaycastResult> results = new List<RaycastResult>();
-    GameObject cachedObject;
     List<GameObject> cachedObjects = new List<GameObject>();
-    bool interacting = false;
     bool pointerDown;
     PointerEventData currentData;
+    private Vector3 originPosition;
+    private int siblingIndex;
 
     private void Update()
     {
@@ -44,25 +44,6 @@ public class Card : MonoBehaviour
             {
                 //Start RayCasting for underneathObjects
                 EventSystem.current.RaycastAll(currentData, results);
-                /*if (results.Count > 1 && (!interacting || cachedObject!=results[1].gameObject) )
-                {
-                    //Execute Event On Underneath Object
-                    interacting = true;
-                    cachedObject = results[1].gameObject;
-                    ExecuteEvents.Execute(results[1].gameObject, currentData, ExecuteEvents.pointerEnterHandler);
-
-                    for (int i = 1; i < results.Count; i++)
-                    {
-                        cachedObjects.Add(results[i].gameObject);
-                    }
-                }
-                if (results.Count == 1 && interacting)
-                {
-                    interacting = false;
-                    ExecuteEvents.Execute(cachedObject, currentData, ExecuteEvents.pointerExitHandler);
-                    cachedObject = null;
-                }*/
-                print(results.Count);
                 if(cachedObjects.Count < results.Count - 1)
                 {
                     cachedObjects.Add(results[results.Count - 1].gameObject);
@@ -76,6 +57,7 @@ public class Card : MonoBehaviour
                         ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerExitHandler);
                         cachedObjects.RemoveAt(cachedObjects.Count - 1);
                     }
+                    cachedObjects.Clear();
                 }
 
             }
@@ -191,8 +173,6 @@ public class Card : MonoBehaviour
         CardManager.Instance.currentHoveredSlot = null;
         CardManager.Instance.holdingCard = false;
         CardManager.Instance.currentCard = null;
-
-        
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -205,12 +185,22 @@ public class Card : MonoBehaviour
     public void OnPointerUp(PointerEventData eventData)
     {
         pointerDown = false;
+        cachedObjects.Clear();
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
         {
             CardManager.Instance.hoveredCard = this;
+        }
+        else if(transform.parent == CardManager.Instance.cardHandContainer.transform)//Check if in hand
+        {
+            //Scale up and bring to front;
+            siblingIndex = transform.GetSiblingIndex();
+            transform.SetAsLastSibling();
+            rectTransform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            originPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);
+            LeanTween.move(gameObject, rectTransform.position + new Vector3(0, 0.05f,0), 0.5f).setEaseOutSine();
         }
     }
 
@@ -219,6 +209,14 @@ public class Card : MonoBehaviour
         if(CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
         {
             CardManager.Instance.hoveredCard = null; 
+        }
+        else if (transform.parent == CardManager.Instance.cardHandContainer.transform)//Check if in hand
+        {
+            //Scale up and bring to front;
+            LeanTween.cancel(gameObject);
+            rectTransform.localScale = Vector3.one;
+            rectTransform.anchoredPosition = originPosition;
+            transform.SetSiblingIndex(siblingIndex);
         }
     }
 
@@ -231,7 +229,7 @@ public class Card : MonoBehaviour
 
         data = null;
         currentSlot = null;
-        cachedObject = null;
+        cachedObjects.Clear();
 
         rectTransform.position = basePosition;
 
