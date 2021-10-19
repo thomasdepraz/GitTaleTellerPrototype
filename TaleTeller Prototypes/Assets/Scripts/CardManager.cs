@@ -20,6 +20,7 @@ public class CardManager : Singleton<CardManager>
     public GameObject movingCardsContainer;
     public GameObject cardHandContainer;
 
+    public Pointer pointerRef;
     public GameObject pointer;
 
     public CustomInputModule inputModule;

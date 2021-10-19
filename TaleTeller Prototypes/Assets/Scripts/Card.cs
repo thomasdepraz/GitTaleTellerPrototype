@@ -35,9 +35,18 @@ public class Card : MonoBehaviour
     private Vector2 originPosition;
     private int siblingIndex;
 
+    //Variables for dragging management
+    public CanvasGroup canvasGroup;
+    private bool isDragging;
+
+    public float x;
+    public float y;
+    public float z;
+    public float w;
+
     private void Update()
     {
-        if(pointerDown)
+        /*if(pointerDown)
         {
             currentData = CardManager.Instance.inputModule.GetPointerEventData();
             if(currentData != null)
@@ -63,6 +72,21 @@ public class Card : MonoBehaviour
                     }
                 }
             }
+        }*/
+
+
+        if(isDragging && Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+            canvasGroup.blocksRaycasts = true;
+            CardManager.Instance.holdingCard = false;
+            CardManager.Instance.currentCard = null;
+        }
+        if(isDragging)
+        {
+            //follow 
+            rectTransform.position = targetTransform.position;
+            rectTransform.rotation = Quaternion.Lerp(rectTransform.rotation, new Quaternion(CardManager.Instance.pointerRef.pointerDirection.y, CardManager.Instance.pointerRef.pointerDirection.x, 0, 1), Time.deltaTime);
         }
     }
 
@@ -89,13 +113,19 @@ public class Card : MonoBehaviour
         transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
         transform.SetAsLastSibling();
 
+        //new event methods
+        isDragging = true;
+        canvasGroup.blocksRaycasts = false;
+        rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
+        rectTransform.localScale = Vector3.one;
+
         if (currentSlot != null)
             currentSlot.canvasGroup.blocksRaycasts = true;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.position = targetTransform.position;
+        //rectTransform.position = targetTransform.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)

@@ -45,12 +45,12 @@ public class DraftSlot : MonoBehaviour
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        image.sprite = defaultSprite;
+
         if (CardManager.Instance.holdingCard)
         {
-            if(CardManager.Instance.currentHoveredSlot == this)
+            if (CardManager.Instance.currentHoveredSlot == this)
                 CardManager.Instance.currentHoveredSlot = null;
         }
-
-        image.sprite = defaultSprite;
     }
 }
