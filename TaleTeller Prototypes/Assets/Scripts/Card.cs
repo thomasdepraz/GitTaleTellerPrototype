@@ -32,7 +32,7 @@ public class Card : MonoBehaviour
     List<GameObject> cachedObjects = new List<GameObject>();
     bool pointerDown;
     PointerEventData currentData;
-    private Vector3 originPosition;
+    private Vector2 originPosition;
     private int siblingIndex;
 
     private void Update()
@@ -44,22 +44,24 @@ public class Card : MonoBehaviour
             {
                 //Start RayCasting for underneathObjects
                 EventSystem.current.RaycastAll(currentData, results);
-                if(cachedObjects.Count < results.Count - 1)
+                if(results.Count >0)
                 {
-                    cachedObjects.Add(results[results.Count - 1].gameObject);
-                    ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerEnterHandler);
-                }
-                else if(cachedObjects.Count > results.Count-1)
-                {
-                    int difference = cachedObjects.Count - (results.Count - 1);
-                    for (int i = 0; i < difference; i++)
+                    if(cachedObjects.Count < results.Count - 1)
                     {
-                        ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerExitHandler);
-                        cachedObjects.RemoveAt(cachedObjects.Count - 1);
+                        cachedObjects.Add(results[results.Count - 1].gameObject);
+                        ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerEnterHandler);
                     }
-                    cachedObjects.Clear();
+                    else if(cachedObjects.Count > results.Count-1 && cachedObjects.Count>0)
+                    {
+                        int difference = cachedObjects.Count - (results.Count - 1);
+                        for (int i = 0; i < difference; i++)
+                        {
+                            ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerExitHandler);
+                            cachedObjects.RemoveAt(cachedObjects.Count - 1);
+                        }
+                        cachedObjects.Clear();
+                    }
                 }
-
             }
         }
     }
@@ -75,6 +77,7 @@ public class Card : MonoBehaviour
         cardWeight.text = data.weight.ToString();
 
         gameObject.SetActive(true);
+        originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -187,6 +190,7 @@ public class Card : MonoBehaviour
         pointerDown = false;
         cachedObjects.Clear();
     }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
@@ -196,11 +200,17 @@ public class Card : MonoBehaviour
         else if(transform.parent == CardManager.Instance.cardHandContainer.transform)//Check if in hand
         {
             //Scale up and bring to front;
+            LeanTween.cancel(gameObject);
             siblingIndex = transform.GetSiblingIndex();
             transform.SetAsLastSibling();
+
+            rectTransform.anchoredPosition = originPosition;
+            originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
+
+            rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0);
             rectTransform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-            originPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);
-            LeanTween.move(gameObject, rectTransform.position + new Vector3(0, 0.05f,0), 0.5f).setEaseOutSine();
+
+            LeanTween.move(rectTransform, rectTransform.anchoredPosition + new Vector2(0, 10f), 0.5f).setEaseOutSine();
         }
     }
 
@@ -214,8 +224,10 @@ public class Card : MonoBehaviour
         {
             //Scale up and bring to front;
             LeanTween.cancel(gameObject);
+            rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
             rectTransform.localScale = Vector3.one;
-            rectTransform.anchoredPosition = originPosition;
+            LeanTween.move(rectTransform, originPosition, 0.5f).setEaseOutSine();
+            //rectTransform.anchoredPosition = originPosition;
             transform.SetSiblingIndex(siblingIndex);
         }
     }
