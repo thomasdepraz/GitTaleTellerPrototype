@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class StoryManager : MonoBehaviour
 {
-    
+    List<StoryEvent> stepEvents = new List<StoryEvent>();
+
 }
