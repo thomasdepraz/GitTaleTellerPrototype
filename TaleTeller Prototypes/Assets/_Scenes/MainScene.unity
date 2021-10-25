@@ -843,6 +843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 519420031}
   screenSize: {x: 0, y: 0}
+  pointerDirection: {x: 0, y: 0, z: 0}
 --- !u!4 &710431145
 Transform:
   m_ObjectHideFlags: 0
@@ -1341,6 +1342,7 @@ MonoBehaviour:
   hoveredCard: {fileID: 0}
   movingCardsContainer: {fileID: 909166351}
   cardHandContainer: {fileID: 227346437}
+  pointerRef: {fileID: 710431144}
   pointer: {fileID: 710431143}
   inputModule: {fileID: 567353437}
 --- !u!1001 &1341259689
@@ -1424,7 +1426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898892, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 292.99988
+      value: 292.99985
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898892, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1746,7 +1748,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898892, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 146.99998
+      value: 147
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898892, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2316,7 +2318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898892, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -295.00006
+      value: -295.0001
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898892, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_AnchoredPosition.y

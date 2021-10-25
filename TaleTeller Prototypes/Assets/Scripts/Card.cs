@@ -46,35 +46,6 @@ public class Card : MonoBehaviour
 
     private void Update()
     {
-        /*if(pointerDown)
-        {
-            currentData = CardManager.Instance.inputModule.GetPointerEventData();
-            if(currentData != null)
-            {
-                //Start RayCasting for underneathObjects
-                EventSystem.current.RaycastAll(currentData, results);
-                if(results.Count >0)
-                {
-                    if(cachedObjects.Count < results.Count - 1)
-                    {
-                        cachedObjects.Add(results[results.Count - 1].gameObject);
-                        ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerEnterHandler);
-                    }
-                    else if(cachedObjects.Count > results.Count-1 && cachedObjects.Count>0)
-                    {
-                        int difference = cachedObjects.Count - (results.Count - 1);
-                        for (int i = 0; i < difference; i++)
-                        {
-                            ExecuteEvents.Execute(cachedObjects[cachedObjects.Count - 1], currentData, ExecuteEvents.pointerExitHandler);
-                            cachedObjects.RemoveAt(cachedObjects.Count - 1);
-                        }
-                        cachedObjects.Clear();
-                    }
-                }
-            }
-        }*/
-
-
         if(isDragging && Input.GetMouseButtonUp(0))
         {
             isDragging = false;
@@ -102,6 +73,9 @@ public class Card : MonoBehaviour
 
         gameObject.SetActive(true);
         originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
+
+        //add random rotation 
+        rectTransform.rotation = new Quaternion(0,0,Random.Range(-0.05f,0.05f),1);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -223,12 +197,15 @@ public class Card : MonoBehaviour
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
+        if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this && currentSlot!=null)
         {
             CardManager.Instance.hoveredCard = this;
         }
-        else if(transform.parent == CardManager.Instance.cardHandContainer.transform)//Check if in hand
+        else if(transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard)//Check if in hand
         {
+            //Reset card rotation
+            rectTransform.rotation = new Quaternion(0,0,0,0);
+
             //Scale up and bring to front;
             LeanTween.cancel(gameObject);
             siblingIndex = transform.GetSiblingIndex();
