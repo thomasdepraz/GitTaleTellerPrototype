@@ -10,7 +10,7 @@ public enum StoryEventType
     Object, 
     Npc
 }
-public abstract class StoryEvent : MonoBehaviour
+public abstract class StoryEvent : ScriptableObject
 {
     public string eventName;
     public string eventDescription;

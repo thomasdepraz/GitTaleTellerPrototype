@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "CombatEvent", menuName = "Event/Combat Event", order = 1)]
 public class CombatEvent : StoryEvent 
 {
 
@@ -30,7 +31,8 @@ public class CombatEvent : StoryEvent
 
     public override void OnTriggerEnterEvent()
     {
-        StartCoroutine(Combat());
+        //Make something launch combat
+        //StartCoroutine(Combat());
     }
 
     public override void OnTriggerExitEvent()
@@ -66,7 +68,5 @@ public class CombatEvent : StoryEvent
 
         yield return null;
     }
-
-
 
 }
