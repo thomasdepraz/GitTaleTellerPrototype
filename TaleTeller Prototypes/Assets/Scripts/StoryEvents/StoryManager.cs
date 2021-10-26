@@ -5,7 +5,7 @@ using UnityEngine;
 public class StoryManager : MonoBehaviour
 {
     [Header("Stats")]
-    public int chapterCount;
+    [HideInInspector]public int chapterCount;
     public List<List<StoryEvent>> steps = new List<List<StoryEvent>>();
 
     [Header("Events")]
@@ -18,10 +18,12 @@ public class StoryManager : MonoBehaviour
 
     private void Start()
     {
+        steps = new List<List<StoryEvent>>();
+        print(steps);
         //Init list
-        for (int i = 0; i < steps.Count; i++)
+        for (int i = 0; i < 4; i++)
         {
-            steps[i] = new List<StoryEvent>();
+            steps.Add(new List<StoryEvent>());
         }
 
         //Initialize first chapter
@@ -33,19 +35,32 @@ public class StoryManager : MonoBehaviour
         //Init one monster for the time being
         int r = Random.Range(1,4);
         steps[r].Add(combatEvent);
+        steps[r][0].InitializeEvent();//init event
+        print($"Added monster on step {r + 1}");
 
         //Init graphics
 
     }
-
+    public void StartStory()
+    {
+        StartCoroutine(ReadStory());
+    }
     public IEnumerator ReadStory()
     {
         //Visually move the player
 
         //Make the hero go through every events and trigger enter and exit on every event
-        if (steps[currentStepIndex][currentStepEventListIndex] != null)
+        yield return new WaitForSeconds(1);
+        if (steps[currentStepIndex].Count > 0)
+        {
             steps[currentStepIndex][currentStepEventListIndex].OnTriggerEnterEvent();
-
+            print($"Trigger event n{currentStepEventListIndex + 1} at step {currentStepIndex + 1}");
+        }
+        else
+        {
+            print($"Did not trigger event at step {currentStepIndex + 1}");
+            MoveToNextEvent();
+        }
         yield return null;
     }
     public void MoveToNextEvent()
@@ -54,6 +69,7 @@ public class StoryManager : MonoBehaviour
         {
             currentStepEventListIndex++;
             //launch readstory
+            StartCoroutine(ReadStory());
         }
         else
         {
@@ -62,18 +78,31 @@ public class StoryManager : MonoBehaviour
                 currentStepEventListIndex = 0;
                 currentStepIndex++;
                 //launch readstory
+                StartCoroutine(ReadStory());
             }
             else
             {
-                Debug.Log("Fn du chapitre");
+                Debug.Log("Fin du chapitre");
+                chapterCount++;
                 currentStepIndex = 0;
+                currentStepEventListIndex = 0;
+
+                //Start new Chapter
+                StartNewChapter();
             }
         }
     }
-
+    public void StartNewChapter()
+    {
+        //Clear lists
+        for (int i = 0; i < steps.Count; i++)
+        {
+            steps[i].Clear();
+        }
+        InitializeChapter();
+    }
     public void StartEventCoroutine(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);
     }
-
 }

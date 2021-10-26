@@ -1,22 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
 
     [Header("References")]
-    public HeroBaseData heroData;
+    [SerializeField] public HeroBaseData heroData;
+    [SerializeField] public Hero secondaryHero;
+
+    [Header("UI")]
+    public TextMeshProUGUI heroHpUI;
+    public TextMeshProUGUI heroAttackUI;
+    public TextMeshProUGUI heroBonusDamageUI;
 
     //Private hero variables
-    [HideInInspector]public int lifePoints;
-    [HideInInspector]public int attackDamage;
+    private int _maxLifePoints;
+    private int _lifePoints;
+    private int _attackDamage;
+    private int _bonusDamage;
+    [HideInInspector] public int maxLifePoints
+    { 
+        get => _maxLifePoints ; 
+        set 
+        {
+            _maxLifePoints = value;
+            heroHpUI.text = "HP : " + value.ToString() + "/" + maxLifePoints;
+        }
+    }
+    [HideInInspector]public int lifePoints 
+    { 
+        get => _lifePoints ; 
+        set 
+        { 
+            _lifePoints = value;
+            heroHpUI.text = "HP : " + value.ToString() + "/" + maxLifePoints;
+
+            //Different feedack if damage taken or if healed
+        }
+    }
+    [HideInInspector]public int attackDamage
+    {
+        get => _attackDamage;
+        set
+        {
+            _attackDamage = value;
+            heroAttackUI.text = "Damage : " + value.ToString();
+        }
+    }
+    [HideInInspector]public int bonusDamage
+    {
+        get => _bonusDamage;
+        set
+        {
+            _bonusDamage = value;
+            heroBonusDamageUI.text = "Bonus DMG : " + value.ToString();
+        }
+    }
+
     [HideInInspector]public int armor;
-    [HideInInspector]public int bonusDamage;
 
 
     public void InitializeHero()
     {
+        maxLifePoints = heroData.baseLifePoints;
         lifePoints = heroData.baseLifePoints;
         attackDamage = heroData.baseAttackDamage;
         armor = 0;
@@ -29,7 +77,7 @@ public class Hero : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        InitializeHero();
     }
 
     // Update is called once per frame

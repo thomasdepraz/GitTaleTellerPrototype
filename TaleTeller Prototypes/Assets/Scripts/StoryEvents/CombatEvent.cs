@@ -32,7 +32,8 @@ public class CombatEvent : StoryEvent
     public override void OnTriggerEnterEvent()
     {
         //Make something launch combat
-        //StartCoroutine(Combat());
+        Debug.Log("Fight!");
+        GameManager.Instance.storyManager.StartEventCoroutine(Combat());
     }
 
     public override void OnTriggerExitEvent()
@@ -43,13 +44,17 @@ public class CombatEvent : StoryEvent
     IEnumerator Combat()
     {
         //Get a reference to the player and resolve the fight
-        while(currentHero.lifePoints > 0 && currentEnemy.baseLifePoints > 0)
+        while(currentHero.lifePoints > 0 && enemyLifePoints > 0)
         {
             //Let the player attack
             enemyLifePoints -= currentHero.attackDamage;
+
             yield return new WaitForSeconds(1f);//wait to show feedback
 
-            //If alive monster attack
+            if (enemyLifePoints <= 0)
+                break;
+            
+            //If alive, monster attack
             currentHero.lifePoints -= currentEnemy.baseAttackDamage;
 
             //repeat if player alive
@@ -58,12 +63,16 @@ public class CombatEvent : StoryEvent
         if(enemyLifePoints <= 0)
         {
             //End the fight and keep going 
+            Debug.Log("enemy dead");
+            GameManager.Instance.storyManager.MoveToNextEvent();
 
         }
         else
         {
             //make a new Hero
+            Debug.Log("player dead");
 
+            //resume fight
         }
 
         yield return null;

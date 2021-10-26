@@ -6,6 +6,7 @@ public class GameManager : Singleton<GameManager>
 {
     [Header("References")]
     public Hero currentHero;
+    public StoryManager storyManager;
 
     public void Awake()
     {

@@ -8,6 +8,4 @@ public class HeroBaseData : ScriptableObject
     [Header("Stats")]
     public int baseLifePoints;
     public int baseAttackDamage;
-
-
 }

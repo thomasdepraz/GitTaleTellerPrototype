@@ -37,6 +37,9 @@ public class DraftBoard : MonoBehaviour
                 slots[i].canvasGroup.blocksRaycasts = true;
             }
         }
+
+        //launch story
+        GameManager.Instance.storyManager.StartStory();
     }
 
     public bool IsEmpty()
