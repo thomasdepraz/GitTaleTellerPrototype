@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0543b21e4b38a04e9756e50a8953389, type: 3}
-  m_Name: Ogre
+  m_Name: ForcePotion
   m_EditorClassIdentifier: 
-  cardName: Ogre
+  cardName: Force Potion
   weight: 1
   attribute: 0
-  type: 0
-  description: Agrou
+  type: 2
+  linkedEvent: {fileID: 11400000, guid: f586230520a4a2f4a87ecd131d2cadd0, type: 2}
+  description: bright red
   canInteract: 0

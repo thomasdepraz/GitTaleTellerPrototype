@@ -23,6 +23,7 @@ public class CardData : ScriptableObject
     public int weight;
     public CardAttribute attribute;
     public CardType type;
+    public StoryEvent linkedEvent;
 
     [TextArea(2,3)]
     public string description;

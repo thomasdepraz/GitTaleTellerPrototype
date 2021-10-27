@@ -8,7 +8,7 @@ public class CombatEvent : StoryEvent
 
     //Get a reference to the enemy that must be beaten
     [Header("References")]
-    public EnemyData currentEnemy;
+    public EnemyData currentEnemy; //MAYBE I NEED *NEW* KEYWORD
 
     //Get private variables for combat
     Hero currentHero;

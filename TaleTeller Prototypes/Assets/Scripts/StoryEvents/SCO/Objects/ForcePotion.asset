@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0543b21e4b38a04e9756e50a8953389, type: 3}
-  m_Name: Spear
+  m_Script: {fileID: 11500000, guid: 994e476d0bdecbf42b06419a23b0e668, type: 3}
+  m_Name: ForcePotion
   m_EditorClassIdentifier: 
-  cardName: Spear
-  weight: 1
-  attribute: 0
-  type: 1
-  description: Oui oui la lance
-  canInteract: 0
+  eventName: Force Potion
+  eventDescription: 
+  eventType: 3
+  effects:
+  - heroProperty: 4
+    value: 4
