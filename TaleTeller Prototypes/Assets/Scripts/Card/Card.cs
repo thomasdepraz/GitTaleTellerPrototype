@@ -253,7 +253,6 @@ public class Card : MonoBehaviour
         rectTransform.position = basePosition;
 
         CardManager.Instance.cardHand.currentHand.Remove(this);
-        CardManager.Instance.cardHand.hiddenHand.Add(this);
 
         gameObject.SetActive(false);
 

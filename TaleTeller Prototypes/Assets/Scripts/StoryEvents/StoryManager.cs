@@ -18,8 +18,8 @@ public class StoryManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.LogError("Opening the console");
         steps = new List<List<StoryEvent>>();
-        print(steps);
         //Init list
         for (int i = 0; i < 4; i++)
         {
@@ -36,7 +36,7 @@ public class StoryManager : MonoBehaviour
         int r = Random.Range(1,4);
         steps[r].Add(combatEvent);
         steps[r][0].InitializeEvent();//init event
-        print($"Added monster on step {r + 1}");
+        Debug.LogError($"Added monster on step {r + 1}");
 
         //Init graphics
 
@@ -48,17 +48,16 @@ public class StoryManager : MonoBehaviour
     public IEnumerator ReadStory()
     {
         //Visually move the player
+        Debug.LogError($"Moving to step {currentStepIndex + 1}");
 
         //Make the hero go through every events and trigger enter and exit on every event
         yield return new WaitForSeconds(1);
         if (steps[currentStepIndex].Count > 0)
         {
             steps[currentStepIndex][currentStepEventListIndex].OnTriggerEnterEvent();
-            print($"Trigger event n{currentStepEventListIndex + 1} at step {currentStepIndex + 1}");
         }
         else
         {
-            print($"Did not trigger event at step {currentStepIndex + 1}");
             MoveToNextEvent();
         }
         yield return null;
@@ -82,7 +81,7 @@ public class StoryManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Fin du chapitre");
+                Debug.LogError("Fin du chapitre");
                 chapterCount++;
                 currentStepIndex = 0;
                 currentStepEventListIndex = 0;
@@ -100,6 +99,12 @@ public class StoryManager : MonoBehaviour
             steps[i].Clear();
         }
         InitializeChapter();
+
+        //Clear player temporary values
+        GameManager.Instance.currentHero.bonusDamage = 0;
+
+        //Deal Cards
+        CardManager.Instance.cardDeck.DealCards(CardManager.Instance.cardHand.maxHandSize);
     }
     public void StartEventCoroutine(IEnumerator coroutine)
     {

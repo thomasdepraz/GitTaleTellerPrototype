@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Deck : MonoBehaviour
-    ,IPointerClickHandler
 {
     public List<CardData> cardDeck;
     public List<CardData> discardPile;
@@ -13,6 +12,7 @@ public class Deck : MonoBehaviour
     public void Start()
     {
         ShuffleCards(cardDeck);
+        DealCards(CardManager.Instance.cardHand.maxHandSize);//Deal First hand
     }
 
     public List<CardData> ShuffleCards(List<CardData> deckToShuffle) //FisherYates Shuffle
@@ -45,14 +45,10 @@ public class Deck : MonoBehaviour
                 }
                 discardPile.Clear();
                 ShuffleCards(cardDeck);
+                Debug.LogError("Shuffling discard pile in deck");
+
                 i--;
             }
         }
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        int numberToDeal = CardManager.Instance.cardHand.maxHandSize - CardManager.Instance.cardHand.currentHand.Count;
-        DealCards(numberToDeal);
     }
 }

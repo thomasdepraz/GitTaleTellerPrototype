@@ -8,7 +8,6 @@ public class Hero : MonoBehaviour
 
     [Header("References")]
     [SerializeField] public HeroBaseData heroData;
-    [SerializeField] public Hero secondaryHero;
 
     [Header("UI")]
     public TextMeshProUGUI heroHpUI;
@@ -20,22 +19,29 @@ public class Hero : MonoBehaviour
     private int _lifePoints;
     private int _attackDamage;
     private int _bonusDamage;
-    [HideInInspector] public int maxLifePoints
+    [HideInInspector]public int maxLifePoints
     { 
         get => _maxLifePoints ; 
         set 
         {
             _maxLifePoints = value;
-            heroHpUI.text = "HP : " + value.ToString() + "/" + maxLifePoints;
+            heroHpUI.text = "HP : " +  lifePoints + "/" + value.ToString();
         }
     }
     [HideInInspector]public int lifePoints 
     { 
         get => _lifePoints ; 
         set 
-        { 
+        {
             _lifePoints = value;
-            heroHpUI.text = "HP : " + value.ToString() + "/" + maxLifePoints;
+
+            if (_lifePoints  > maxLifePoints)
+                _lifePoints = maxLifePoints;
+            else if (_lifePoints < 0)
+                _lifePoints = 0;
+
+
+            heroHpUI.text = "HP : " + lifePoints.ToString() + "/" + maxLifePoints;
 
             //Different feedack if damage taken or if healed
         }

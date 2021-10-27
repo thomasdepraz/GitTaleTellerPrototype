@@ -31,18 +31,21 @@ public class ObjectEvent : StoryEvent
     {
         //Get hero from manager
         currentHero = GameManager.Instance.currentHero;
+
         //Initialize graphics on storyLine
 
     }
 
     public override void OnTriggerEnterEvent()
     {
+        Debug.LogError($"Trigger event {eventName}");
+
         for (int i = 0; i < effects.Count; i++)
         {
             switch (effects[i].heroProperty)
             {
                 case HeroProperty.None:
-                    Debug.Log("Object has no effect");
+                    Debug.LogError("Object has no effect");
                     break;
                 case HeroProperty.MaxHP:
                     currentHero.maxLifePoints += effects[i].value;
@@ -57,7 +60,7 @@ public class ObjectEvent : StoryEvent
                     currentHero.bonusDamage += effects[i].value;
                     break;
                 default:
-                    Debug.Log("Something went wrong");
+                    Debug.LogError("Something went wrong");
                     break;
             }
         }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e089ebc16300ad478f17ee9d41135ff, type: 3}
   m_Name: CombatEvent_Ogre
   m_EditorClassIdentifier: 
-  eventName: Le combat contre l'ogre agrou
+  eventName: l'ogre
   eventDescription: aie aie il fait mal
   eventType: 1
   currentEnemy: {fileID: 11400000, guid: 739103947f1c9bf46bfff8eebde676ae, type: 2}

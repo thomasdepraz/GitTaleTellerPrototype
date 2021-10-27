@@ -13,7 +13,11 @@ public class DraftBoard : MonoBehaviour
             //Create event based on card data
             if(slots[i].currentPlacedCard != null)
             {
-                Debug.Log($"Created event of type {slots[i].currentPlacedCard.data.type} at story index {i}.");
+                Debug.Log($"Created {slots[i].currentPlacedCard.data.linkedEvent.eventName} at step {i+1}.");
+
+                StoryEvent stEvent = Instantiate(slots[i].currentPlacedCard.data.linkedEvent);//Create copy of sco
+                GameManager.Instance.storyManager.steps[i].Add(stEvent);//Add sco to story line
+                stEvent.InitializeEvent();//init event
             }
         }
 
@@ -37,6 +41,8 @@ public class DraftBoard : MonoBehaviour
                 slots[i].canvasGroup.blocksRaycasts = true;
             }
         }
+        //Clear Hand
+        CardManager.Instance.cardHand.DiscardHand();
 
         //launch story
         GameManager.Instance.storyManager.StartStory();

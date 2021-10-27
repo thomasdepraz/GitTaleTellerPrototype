@@ -6,7 +6,7 @@ public class Hand : MonoBehaviour
 {
 
     public List<Card> hiddenHand = new List<Card>();
-    [HideInInspector]public List<Card> currentHand = new List<Card>();
+    public List<Card> currentHand = new List<Card>();
     public int maxHandSize;
 
     public void InitCard(CardData data)
@@ -19,6 +19,16 @@ public class Hand : MonoBehaviour
                 hiddenHand[i].CardInit(data);
                 break;
             }
+        }
+    }
+
+    public void DiscardHand()
+    {
+        int cachedCount = currentHand.Count;
+        for (int i = 0; i < cachedCount; i++)
+        {
+            CardManager.Instance.cardDeck.discardPile.Add(currentHand[0].data);
+            currentHand[0].ResetCard();   
         }
     }
 
