@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Campfire
   m_EditorClassIdentifier: 
   cardName: Campfire
-  weight: 1
+  creativityCost: 3
   attribute: 0
   type: 1
   linkedEvent: {fileID: 11400000, guid: d3254b71b3afd4f4787f9bcfd9c63675, type: 2}
-  description: hot hot
+  description: +4 HP
   canInteract: 0

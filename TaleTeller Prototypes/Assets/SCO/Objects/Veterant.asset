@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Veterant
   m_EditorClassIdentifier: 
   cardName: Veterant
-  weight: 1
+  creativityCost: 5
   attribute: 0
   type: 2
   linkedEvent: {fileID: 11400000, guid: fca8f72f2f00c4840a4584ed88cf81b5, type: 2}
-  description: old fox
+  description: +1 Base Dmg
   canInteract: 0

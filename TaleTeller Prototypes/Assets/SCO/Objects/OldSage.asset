@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: OldSage
   m_EditorClassIdentifier: 
   cardName: Old Sage
-  weight: 1
+  creativityCost: 5
   attribute: 0
   type: 2
   linkedEvent: {fileID: 11400000, guid: 2f4a5056c28a554448f82332e6c289cf, type: 2}
-  description: very wise
+  description: +2 max HP
   canInteract: 0

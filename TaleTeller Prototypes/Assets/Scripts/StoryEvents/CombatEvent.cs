@@ -23,8 +23,13 @@ public class CombatEvent : StoryEvent
         //Initialize enemy on story line
 
         //Scale stats based on player progression 
-        enemyLifePoints = currentEnemy.baseLifePoints;
-        enemyAttackPoints = currentEnemy.baseAttackDamage;
+        enemyLifePoints = currentEnemy.baseLifePoints + (int)Random.Range(GameManager.Instance.storyManager.chapterCount -2, GameManager.Instance.storyManager.chapterCount+2);
+        enemyAttackPoints = currentEnemy.baseAttackDamage + (int)Random.Range((GameManager.Instance.storyManager.chapterCount * 0.75f) -1, (GameManager.Instance.storyManager.chapterCount * 0.75f) + 1);
+        
+        if (enemyAttackPoints < 1)//set min to 1
+            enemyAttackPoints = 1;
+        if (enemyLifePoints < 3)
+            enemyLifePoints = 3;
 
         //Initialize graphics
     }
@@ -32,7 +37,7 @@ public class CombatEvent : StoryEvent
     public override void OnTriggerEnterEvent()
     {
         //Make something launch combat
-        Debug.LogError($"Fight against {eventName}");
+        Debug.LogError($"Fight against {eventName}, HP : {enemyLifePoints}, DMG  : {enemyAttackPoints} ");
         GameManager.Instance.storyManager.StartEventCoroutine(Combat());
     }
 
@@ -70,9 +75,11 @@ public class CombatEvent : StoryEvent
         else
         {
             //make a new Hero
-            Debug.LogError("player dead");
+            Debug.LogError("player dead, reviving hero");
+            currentHero.ReviveHero();
 
-            //resume fight
+            //keep going
+            GameManager.Instance.storyManager.MoveToNextEvent();
         }
 
         yield return null;

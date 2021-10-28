@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
+    [Header("Stats")]
+    public int heroReviveCost;
 
     [Header("References")]
     [SerializeField] public HeroBaseData heroData;
@@ -77,9 +79,19 @@ public class Hero : MonoBehaviour
         bonusDamage = 0;
 
         //Initialize graphics on story line
-
     }
     
+    public void ReviveHero()
+    {
+        //Apply creativityCost of reviving
+        GameManager.Instance.creativityManager.creativity -= heroReviveCost;
+
+        //Reset hero stats
+        lifePoints = maxLifePoints;
+        bonusDamage = 0;
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {

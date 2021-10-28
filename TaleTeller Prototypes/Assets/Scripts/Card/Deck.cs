@@ -41,7 +41,11 @@ public class Deck : MonoBehaviour
             {
                 for (int j = 0; j < discardPile.Count; j++)
                 {
+
                     cardDeck.Add(discardPile[j]);
+
+                    //Remove 1 creativity per recycled card
+                    GameManager.Instance.creativityManager.creativity--;
                 }
                 discardPile.Clear();
                 ShuffleCards(cardDeck);

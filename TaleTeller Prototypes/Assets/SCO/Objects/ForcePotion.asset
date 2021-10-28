@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ForcePotion
   m_EditorClassIdentifier: 
   cardName: Force Potion
-  weight: 1
+  creativityCost: 3
   attribute: 0
   type: 2
   linkedEvent: {fileID: 11400000, guid: f586230520a4a2f4a87ecd131d2cadd0, type: 2}
-  description: bright red
+  description: +4 Bonus Dmg
   canInteract: 0

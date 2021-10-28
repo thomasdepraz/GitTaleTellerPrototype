@@ -24,7 +24,7 @@ public class Card : MonoBehaviour
     [HideInInspector] public CardData data;
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI cardDescription;
-    public TextMeshProUGUI cardWeight;
+    public TextMeshProUGUI cardCreativityCost;
 
     delegate void UIEvent();
 
@@ -63,13 +63,13 @@ public class Card : MonoBehaviour
 
     public void CardInit(CardData data)
     {
+        this.data = Instantiate(data);
         //load Data and activate gameobject
         basePosition = transform.position;
-        this.data = data; 
 
         cardName.text = data.cardName;
         cardDescription.text = data.description;
-        cardWeight.text = data.weight.ToString();
+        cardCreativityCost.text = data.creativityCost.ToString();
 
         gameObject.SetActive(true);
         originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
@@ -117,6 +117,10 @@ public class Card : MonoBehaviour
             currentSlot = CardManager.Instance.currentHoveredSlot;
             currentSlot.canvasGroup.blocksRaycasts = false;
             rectTransform.position = CardManager.Instance.currentHoveredSlot.transform.position;
+
+            //For now add cost to creativity
+            GameManager.Instance.creativityManager.currentBoardCreativityCost += data.creativityCost;
+
         }
         else
         {
@@ -244,7 +248,7 @@ public class Card : MonoBehaviour
         //unload Data and activate gameobject
         cardName.text = string.Empty;
         cardDescription.text = string.Empty;
-        cardWeight.text = string.Empty;
+        cardCreativityCost.text = string.Empty;
 
         data = null;
         currentSlot = null;

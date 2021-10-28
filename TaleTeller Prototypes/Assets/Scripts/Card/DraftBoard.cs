@@ -17,6 +17,8 @@ public class DraftBoard : MonoBehaviour
 
                 StoryEvent stEvent = Instantiate(slots[i].currentPlacedCard.data.linkedEvent);//Create copy of sco
                 GameManager.Instance.storyManager.steps[i].Add(stEvent);//Add sco to story line
+                GameManager.Instance.creativityManager.creativity -= GameManager.Instance.creativityManager.currentBoardCreativityCost;
+                GameManager.Instance.creativityManager.currentBoardCreativityCost = 0;//reset board cost
                 stEvent.InitializeEvent();//init event
             }
         }

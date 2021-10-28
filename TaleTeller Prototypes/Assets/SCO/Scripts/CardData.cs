@@ -20,7 +20,7 @@ public enum CardType
 public class CardData : ScriptableObject
 {
     public string cardName;
-    public int weight;
+    public int creativityCost;
     public CardAttribute attribute;
     public CardType type;
     public StoryEvent linkedEvent;

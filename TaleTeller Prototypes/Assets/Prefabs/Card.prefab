@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 3067991425291460162}
   - component: {fileID: 3067991425291460161}
   m_Layer: 5
-  m_Name: CardWeight
+  m_Name: CardCreativityCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -325,8 +325,12 @@ MonoBehaviour:
   data: {fileID: 0}
   cardName: {fileID: 3067991424827466891}
   cardDescription: {fileID: 3067991426233177122}
-  cardWeight: {fileID: 3067991425291460161}
+  cardCreativityCost: {fileID: 3067991425291460161}
   canvasGroup: {fileID: 7229822922233460070}
+  x: 0
+  y: 0
+  z: 0
+  w: 0
 --- !u!222 &767599543804334279
 CanvasRenderer:
   m_ObjectHideFlags: 0

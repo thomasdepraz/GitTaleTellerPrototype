@@ -105,6 +105,9 @@ public class StoryManager : MonoBehaviour
 
         //Deal Cards
         CardManager.Instance.cardDeck.DealCards(CardManager.Instance.cardHand.maxHandSize);
+
+        //Give creativity
+        GameManager.Instance.creativityManager.creativity += 5;
     }
     public void StartEventCoroutine(IEnumerator coroutine)
     {

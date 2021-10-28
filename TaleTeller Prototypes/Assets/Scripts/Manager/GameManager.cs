@@ -8,6 +8,7 @@ public class GameManager : Singleton<GameManager>
     public Hero currentHero;
     public StoryManager storyManager;
     public CreativityManager creativityManager;
+    public GameObject goButton;
 
     public void Awake()
     {
