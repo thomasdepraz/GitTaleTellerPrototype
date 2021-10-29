@@ -1,15 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StoryManager : MonoBehaviour
 {
     [Header("Stats")]
-    [HideInInspector]public int chapterCount;
+    [HideInInspector] public int chapterCount;
     public List<List<StoryEvent>> steps = new List<List<StoryEvent>>();
+    public float heroMovingSpeed;
 
     [Header("Events")]
     public StoryEvent combatEvent;
+
+    [Header("References")]
+    public List<RectTransform> stepsUI;
+    public RectTransform heroUITransform;
+    public Image heroGraph;
 
     //Private variables
     private int currentStepIndex = 0;
@@ -49,6 +56,8 @@ public class StoryManager : MonoBehaviour
     {
         //Visually move the player
         Debug.LogError($"Moving to step {currentStepIndex + 1}");
+
+        heroUITransform.position = stepsUI[currentStepIndex + 1].position;
 
         //Make the hero go through every events and trigger enter and exit on every event
         yield return new WaitForSeconds(1);
