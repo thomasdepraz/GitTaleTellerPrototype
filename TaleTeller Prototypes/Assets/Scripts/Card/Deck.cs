@@ -32,13 +32,16 @@ public class Deck : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            if(cardDeck.Count > 0)
+            if(cardDeck.Count > 0)//Deal card while deck is not empty
             {
                 CardManager.Instance.cardHand.InitCard(cardDeck[0]);
                 cardDeck.RemoveAt(0);
             }
-            else
+            else //Get card from discrad back to deck
             {
+                if (discardPile.Count == 0)//if discard is empty break the loop
+                    break;
+
                 for (int j = 0; j < discardPile.Count; j++)
                 {
 

@@ -17,10 +17,11 @@ public class CreativityManager : MonoBehaviour
             _creativity = value;
             if (_creativity > maxCreativity)
                 _creativity = maxCreativity;
-            else if(_creativity <0)
+            else if(_creativity <=0)
             {
                 _creativity = 0;
-                //Trigger game over
+                //Trigger game over*
+                GameManager.Instance.GameOver();
             }
 
             creativityBar.fillAmount = (float)_creativity / (float)maxCreativity;
@@ -61,11 +62,8 @@ public class CreativityManager : MonoBehaviour
     {
         //set creativity to max
         creativity = maxCreativity;
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
         
     }
+
 }

@@ -8,7 +8,7 @@ public class CombatEvent : StoryEvent
 
     //Get a reference to the enemy that must be beaten
     [Header("References")]
-    public EnemyData currentEnemy; //MAYBE I NEED *NEW* KEYWORD
+    public CharacterStats currentEnemy; //MAYBE I NEED *NEW* KEYWORD
 
     //Get private variables for combat
     Hero currentHero;
@@ -69,7 +69,7 @@ public class CombatEvent : StoryEvent
         {
             //End the fight and keep going 
             Debug.LogError("Enemy dead");
-            GameManager.Instance.storyManager.MoveToNextEvent();
+            GameManager.Instance.storyManager.MoveToNextStep();
 
         }
         else
@@ -79,7 +79,7 @@ public class CombatEvent : StoryEvent
             currentHero.ReviveHero();
 
             //keep going
-            GameManager.Instance.storyManager.MoveToNextEvent();
+            GameManager.Instance.storyManager.MoveToNextStep();
         }
 
         yield return null;

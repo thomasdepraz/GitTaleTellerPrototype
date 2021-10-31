@@ -32,12 +32,14 @@ public class Hero : MonoBehaviour
     }
     [HideInInspector]public int lifePoints 
     { 
-        get => _lifePoints ; 
-        set 
+        get => _lifePoints ;
+        set
         {
+            int diff = value - lifePoints;
+
             _lifePoints = value;
 
-            if (_lifePoints  > maxLifePoints)
+            if (_lifePoints > maxLifePoints)
                 _lifePoints = maxLifePoints;
             else if (_lifePoints < 0)
                 _lifePoints = 0;
@@ -46,6 +48,8 @@ public class Hero : MonoBehaviour
             heroHpUI.text = "HP : " + lifePoints.ToString() + "/" + maxLifePoints;
 
             //Different feedack if damage taken or if healed
+            if(diff != 0 && diff!= maxLifePoints)
+                GameManager.Instance.storyManager.HeroLifeFeedback(diff);
         }
     }
     [HideInInspector]public int attackDamage

@@ -13,13 +13,13 @@ public class DraftBoard : MonoBehaviour
             //Create event based on card data
             if(slots[i].currentPlacedCard != null)
             {
-                Debug.Log($"Created {slots[i].currentPlacedCard.data.linkedEvent.eventName} at step {i+1}.");
+                Debug.Log($"Created {slots[i].currentPlacedCard.data.cardName} at step {i+1}.");
 
-                StoryEvent stEvent = Instantiate(slots[i].currentPlacedCard.data.linkedEvent);//Create copy of sco
-                GameManager.Instance.storyManager.steps[i].Add(stEvent);//Add sco to story line
+                CardData cardData = slots[i].currentPlacedCard.data;
+                CardToInit card = new CardToInit(cardData, i);
+                GameManager.Instance.storyManager.cardsToInit.Add(card);
                 GameManager.Instance.creativityManager.creativity -= GameManager.Instance.creativityManager.currentBoardCreativityCost;
                 GameManager.Instance.creativityManager.currentBoardCreativityCost = 0;//reset board cost
-                stEvent.InitializeEvent();//init event
             }
         }
 
@@ -33,8 +33,6 @@ public class DraftBoard : MonoBehaviour
             //place all data to discard Pile and reset card to hiddenhand
             if(slots[i].currentPlacedCard != null)
             {
-                CardManager.Instance.cardDeck.discardPile.Add(slots[i].currentPlacedCard.data);
-
                 //Call reset method on card
                 slots[i].currentPlacedCard.ResetCard();
 
@@ -44,7 +42,7 @@ public class DraftBoard : MonoBehaviour
             }
         }
         //Clear Hand
-        CardManager.Instance.cardHand.DiscardHand();
+        //CardManager.Instance.cardHand.DiscardHand();
 
         //launch story
         GameManager.Instance.storyManager.StartStory();

@@ -2,31 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CardAttribute
+public enum CharacterBehaviour
 {
     None,
-    Exhaust, 
-    Ethereal
+    Peaceful, 
+    Agressive
+}
+public enum CardEventTrigger
+{
+    None, 
+    OnEncounter,
+    OnDeath, 
+    OnAppear
 }
 
 public enum CardType
 {
-    Enemy, 
-    Weapon, 
-    Event
+    Character, 
+    Object, 
+    Location
 }
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "Card", menuName = "Data/Card", order = 0)]
 public class CardData : ScriptableObject
 {
     public string cardName;
-    public int creativityCost;
-    public CardAttribute attribute;
+    public bool isKeyCard;
+    public int interestCooldown;
+    public int creativityBurn;
     public CardType type;
-    public StoryEvent linkedEvent;
+    public CharacterBehaviour characterBehaviour;
+    public CharacterStats characterStats;
 
-    [TextArea(2,3)]
+    public CardEventTrigger trigger;
+    public int creativityCost;
+    public CardEffect effect;
+    public Sprite cardGraph;
+
+    [TextArea(2, 3)]
     public string description;
 
-    public bool canInteract;
 }

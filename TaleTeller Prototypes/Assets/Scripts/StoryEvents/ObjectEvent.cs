@@ -66,7 +66,7 @@ public class ObjectEvent : StoryEvent
         }
 
         //Keep going with the story
-        GameManager.Instance.storyManager.MoveToNextEvent();
+        GameManager.Instance.storyManager.MoveToNextStep();
     }
 
     public override void OnTriggerExitEvent()

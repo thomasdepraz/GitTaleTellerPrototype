@@ -10,12 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0543b21e4b38a04e9756e50a8953389, type: 3}
-  m_Name: OldSage
+  m_Name: Force Potion
   m_EditorClassIdentifier: 
-  cardName: Old Sage
-  creativityCost: 5
-  attribute: 0
-  type: 2
-  linkedEvent: {fileID: 11400000, guid: 2f4a5056c28a554448f82332e6c289cf, type: 2}
-  description: +2 max HP
-  canInteract: 0
+  cardName: Force Potion
+  isKeyCard: 0
+  interestCooldown: 0
+  creativityBurn: 0
+  type: 1
+  characterBehaviour: 0
+  characterStats:
+    baseLifePoints: 0
+    baseAttackDamage: 0
+  trigger: 0
+  creativityCost: 3
+  effect: {fileID: 11400000, guid: 5e036a966a065ad409423254a2dec7cb, type: 2}
+  cardGraph: {fileID: 0}
+  description: 

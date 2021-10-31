@@ -10,12 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0543b21e4b38a04e9756e50a8953389, type: 3}
-  m_Name: ForcePotion
+  m_Name: BjorgTheWarrior
   m_EditorClassIdentifier: 
-  cardName: Force Potion
-  creativityCost: 3
-  attribute: 0
-  type: 2
-  linkedEvent: {fileID: 11400000, guid: f586230520a4a2f4a87ecd131d2cadd0, type: 2}
-  description: +4 Bonus Dmg
-  canInteract: 0
+  cardName: Bjorg The Warrior
+  isKeyCard: 0
+  interestCooldown: 0
+  creativityBurn: 0
+  type: 0
+  characterBehaviour: 1
+  characterStats:
+    baseLifePoints: 5
+    baseAttackDamage: 3
+  trigger: 1
+  creativityCost: 5
+  effect: {fileID: 11400000, guid: 37ccd9cae2d518d45a6cce8d9257e49b, type: 2}
+  cardGraph: {fileID: 0}
+  description: 
