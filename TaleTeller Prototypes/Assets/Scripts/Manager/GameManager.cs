@@ -42,6 +42,12 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+
+        }
+
     }
 
     #region GameOver

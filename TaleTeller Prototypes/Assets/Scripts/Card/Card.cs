@@ -63,7 +63,8 @@ public class Card : MonoBehaviour
 
     public void CardInit(CardData data)
     {
-        this.data = Instantiate(data);
+        this.data = data;
+
         //load Data and activate gameobject
         basePosition = transform.position;
 

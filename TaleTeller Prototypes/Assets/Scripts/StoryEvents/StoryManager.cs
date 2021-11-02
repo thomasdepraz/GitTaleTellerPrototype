@@ -34,7 +34,8 @@ public class StoryManager : MonoBehaviour
 
 
     [Header("References")]
-    public List<RectTransform> stepsUI;
+    public List<RectTransform> stepsUI = new List<RectTransform>();
+    public List<StoryStep> stepsContainers = new List<StoryStep>();
     public RectTransform heroUITransform;
     public Image heroGraph;
 
@@ -67,7 +68,8 @@ public class StoryManager : MonoBehaviour
     public void StartNewChapter()
     {
         //Reset player position
-        heroUITransform.position = stepsUI[0].position;
+        heroUITransform.SetParent(stepsContainers[0].self);
+        heroUITransform.SetAsLastSibling();
 
         /*//Clear lists
         for (int i = 0; i < steps.Count; i++)
@@ -81,7 +83,7 @@ public class StoryManager : MonoBehaviour
         GameManager.Instance.currentHero.bonusDamage = 0;
 
         //Deal Cards
-        CardManager.Instance.cardDeck.DealCards(CardManager.Instance.cardHand.maxHandSize);
+        CardManager.Instance.cardDeck.DealCards(CardManager.Instance.cardHand.maxHandSize - CardManager.Instance.cardHand.currentHand.Count);
 
         //Give creativity
         //GameManager.Instance.creativityManager.creativity += 5;
@@ -94,6 +96,16 @@ public class StoryManager : MonoBehaviour
             int stepIndex = cardsToInit[0].index;
 
             cardsToInit.RemoveAt(0);//Remove the card to prevent stack overflow
+
+            //Init card graphics
+            for (int i = 0; i < stepsContainers[stepIndex + 1].cardFeedbackContainers.Count; i++)
+            {
+                if(!stepsContainers[stepIndex + 1].cardFeedbackContainers[i].gameObject.activeSelf)
+                {
+                    stepsContainers[stepIndex + 1].cardFeedbackContainers[i].InitCardFeedback(card);
+                    break;
+                }
+            }
 
             steps[stepIndex].Add(card);//Just add card an let it resolve later
 
@@ -154,6 +166,8 @@ public class StoryManager : MonoBehaviour
 
                         CardManager.Instance.cardDeck.discardPile.Add(stepObjects[i]);
 
+                        stepObjects[i].feedback.UnloadCardFeedback(stepObjects[i]);
+
                         steps[stepIndex].Remove(stepObjects[i]);
 
                         stepObjects.RemoveAt(i);
@@ -194,17 +208,20 @@ public class StoryManager : MonoBehaviour
 
                 yield return new WaitForSeconds(1);
                 fighterB.characterStats.baseLifePoints -= fighterA.characterStats.baseAttackDamage;
+                fighterB?.feedback.UpdateText(fighterB);
 
                 yield return new WaitForSeconds(1);
                 if (fighterB.characterStats.baseLifePoints > 0)//if alive hit back
                 {
                     fighterA.characterStats.baseLifePoints -= fighterA.characterStats.baseAttackDamage;
+                    fighterA?.feedback.UpdateText(fighterA);
                 }
 
                 if (fighterB.characterStats.baseLifePoints <= 0)//Check if dead then reset card
                 {
                     //reset card and remove from story line
                     print($"{fighterB.cardName} is dead, returning the card to discard pile");
+                    fighterB.feedback.UnloadCardFeedback(fighterB);
                     steps[stepIndex].Remove(fighterB);
                     CardManager.Instance.cardDeck.discardPile.Add(fighterB);
 
@@ -212,10 +229,12 @@ public class StoryManager : MonoBehaviour
                     if (fighterB.trigger == CardEventTrigger.OnDeath)
                         fighterB.effect.TriggerEffect();
                 }
+
                 if (fighterA.characterStats.baseLifePoints <= 0)//Check if dead then reset card
                 {
                     //reset card and remove from story line
                     print($"{fighterA.cardName} is dead, returning the card to discard pile");
+                    fighterA.feedback.UnloadCardFeedback(fighterA);
                     steps[stepIndex].Remove(fighterA);
                     CardManager.Instance.cardDeck.discardPile.Add(fighterA);
 
@@ -234,7 +253,6 @@ public class StoryManager : MonoBehaviour
             StartCoroutine(ResolveSteps(stepIndex + 1));
         }
     }
-
     public void StartStory()
     {
         StartCoroutine(InitCards());
@@ -244,13 +262,15 @@ public class StoryManager : MonoBehaviour
         //Visually move the player
         Debug.LogError($"Moving to step {currentStepIndex + 1}");
 
-        heroUITransform.position = stepsUI[currentStepIndex + 1].position;
-
+        heroUITransform.SetParent(stepsContainers[currentStepIndex + 1].self);
+        heroUITransform.SetAsLastSibling();
+        
         //Make the hero go through every events and trigger enter and exit on every event
         yield return new WaitForSeconds(1);
         if (steps[currentStepIndex].Count > 0)
         {
-            //steps[currentStepIndex][currentStepEventListIndex].OnTriggerEnterEvent();
+            List<CardData> clearList = new List<CardData>();
+
             for (int i = 0; i < steps[currentStepIndex].Count; i++)
             {
                 CardData currentCard = steps[currentStepIndex][i];
@@ -266,6 +286,7 @@ public class StoryManager : MonoBehaviour
                         {
                             //Fight
                             currentCard.characterStats.baseLifePoints -= (currentHero.attackDamage + currentHero.bonusDamage);
+                            currentCard?.feedback.UpdateText(currentCard);
 
                             yield return new WaitForSeconds(1f);//wait to show feedback
 
@@ -278,9 +299,13 @@ public class StoryManager : MonoBehaviour
                             //steps[currentStepIndex].Remove(currentCard); CANT REMOVE HERE
                             CardManager.Instance.cardDeck.discardPile.Add(currentCard);
 
+                            currentCard.feedback.UnloadCardFeedback(currentCard);
+
                             //Trigger on death event if need be
                             if (currentCard.trigger == CardEventTrigger.OnDeath)
                                 currentCard.effect.TriggerEffect();
+
+                            clearList.Add(currentCard);
 
                         }
                         if(currentHero.lifePoints <= 0)
@@ -296,11 +321,13 @@ public class StoryManager : MonoBehaviour
                         //Trigger object effect on player
                         currentCard.effect.TriggerEffect();
 
+                        currentCard?.feedback.UnloadCardFeedback(currentCard);
+
                         //Put card in discard
                         CardManager.Instance.cardDeck.discardPile.Add(currentCard);
 
                         //Add to a clear list
-
+                        clearList.Add(currentCard);
 
                         break;
                     case CardType.Location:
@@ -311,6 +338,12 @@ public class StoryManager : MonoBehaviour
                         break;
                 }
             }
+
+            for (int i = 0; i < clearList.Count; i++)
+            {
+                steps[currentStepIndex].Remove(clearList[i]);
+            }
+
             MoveToNextStep();//For now
         }
         else
@@ -319,8 +352,6 @@ public class StoryManager : MonoBehaviour
         }
         yield return null;
     }
-
-
 
     #region Move Hero
     public void MoveToNextStep()
@@ -349,7 +380,8 @@ public class StoryManager : MonoBehaviour
                 Debug.LogError("Fin du chapitre");
 
                 //Move player to last step
-                heroUITransform.position = stepsUI[stepsUI.Count - 1].position;
+                heroUITransform.SetParent(stepsContainers[stepsContainers.Count - 1].self);
+                heroUITransform.SetAsLastSibling();
 
                 chapterCount++;
                 currentStepIndex = 0;

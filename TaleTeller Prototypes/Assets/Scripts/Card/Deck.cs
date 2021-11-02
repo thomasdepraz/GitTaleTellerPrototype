@@ -11,6 +11,11 @@ public class Deck : MonoBehaviour
 
     public void Start()
     {
+        for (int i = 0; i < cardDeck.Count; i++)
+        {
+            cardDeck[i] = Instantiate(cardDeck[i]);
+        }
+
         ShuffleCards(cardDeck);
         DealCards(CardManager.Instance.cardHand.maxHandSize);//Deal First hand
     }

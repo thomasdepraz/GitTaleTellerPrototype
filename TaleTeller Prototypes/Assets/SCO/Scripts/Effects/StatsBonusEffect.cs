@@ -35,13 +35,19 @@ public class StatsBonusEffect : CardEffect
                     break;
                 case AffectedStats.Health:
                     if (target != null)
+                    {
                         target.characterStats.baseLifePoints += affectedStatistics[i].value;
+                        target.feedback.UpdateText(target);
+                    }
                     else
                         GameManager.Instance.currentHero.lifePoints += affectedStatistics[i].value;
                     break;
                 case AffectedStats.Attack:
                     if (target != null)
+                    {
                         target.characterStats.baseAttackDamage += affectedStatistics[i].value;
+                        target.feedback.UpdateText(target);
+                    }
                     else
                         GameManager.Instance.currentHero.attackDamage += affectedStatistics[i].value;
                     break;

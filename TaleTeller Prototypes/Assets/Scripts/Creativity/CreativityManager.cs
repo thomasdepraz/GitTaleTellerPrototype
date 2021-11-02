@@ -26,6 +26,7 @@ public class CreativityManager : MonoBehaviour
 
             creativityBar.fillAmount = (float)_creativity / (float)maxCreativity;
             secondaryCreativityBar.fillAmount = (float)_creativity / (float)maxCreativity;
+            maskBar.fillAmount = (1f - creativityBar.fillAmount) + (float)_currentBoardCreativityCost / (float)maxCreativity ;
         }
     }
     public int maxCreativity;

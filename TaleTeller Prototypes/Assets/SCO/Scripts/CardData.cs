@@ -38,6 +38,7 @@ public class CardData : ScriptableObject
     public int creativityCost;
     public CardEffect effect;
     public Sprite cardGraph;
+    [HideInInspector] public CardFeedback feedback;
 
     [TextArea(2, 3)]
     public string description;
