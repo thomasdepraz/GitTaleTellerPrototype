@@ -32,4 +32,19 @@ public class Hand : MonoBehaviour
         }
     }
 
+    public void UpdateKeyCardStatus()
+    {
+        for (int i = 0; i < currentHand.Count; i++)
+        {
+            if(currentHand[i].data.keyCardActivated)
+            {
+                currentHand[i].data.currentInterestCooldown -= 1;//Lower cooldown
+                if(currentHand[i].data.currentInterestCooldown <= 0)
+                {
+                    GameManager.Instance.creativityManager.creativity -= currentHand[i].data.creativityBurn;//Affect creativity
+                }    
+            }
+        }
+    }
+
 }

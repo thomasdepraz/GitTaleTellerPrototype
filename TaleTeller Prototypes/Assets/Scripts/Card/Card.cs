@@ -67,7 +67,7 @@ public class Card : MonoBehaviour
 
         //load Data and activate gameobject
         basePosition = transform.position;
-
+        data.currentInterestCooldown = data.interestCooldown;
         cardName.text = data.cardName;
         cardDescription.text = data.description;
         cardCreativityCost.text = data.creativityCost.ToString();
@@ -190,8 +190,6 @@ public class Card : MonoBehaviour
     public void OnPointerDown(PointerEventData eventData)
     {
         pointerDown = true;
-
-
     }
 
     public void OnPointerUp(PointerEventData eventData)

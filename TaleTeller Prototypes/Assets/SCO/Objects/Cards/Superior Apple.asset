@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Superior Apple
   isKeyCard: 0
+  keyCardActivated: 0
   interestCooldown: 0
+  currentInterestCooldown: 0
   creativityBurn: 0
   type: 1
   characterBehaviour: 0
@@ -24,6 +26,7 @@ MonoBehaviour:
   trigger: 0
   creativityCost: 3
   effect: {fileID: 11400000, guid: 8eb5d650256f6d041a3e469e105c2cb4, type: 2}
+  deadCardEffect: {fileID: 0}
   cardGraph: {fileID: 21300000, guid: e3bbec142d488b241a7f9cb64f49aad9, type: 3}
   feedback: {fileID: 0}
-  description: 
+  description: +2 HP

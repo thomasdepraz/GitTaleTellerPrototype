@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Force Potion
   isKeyCard: 0
+  keyCardActivated: 0
   interestCooldown: 0
+  currentInterestCooldown: 0
   creativityBurn: 0
   type: 1
   characterBehaviour: 0
@@ -24,6 +26,7 @@ MonoBehaviour:
   trigger: 0
   creativityCost: 3
   effect: {fileID: 11400000, guid: 5e036a966a065ad409423254a2dec7cb, type: 2}
+  deadCardEffect: {fileID: 0}
   cardGraph: {fileID: 21300000, guid: 99c66634f5cf62f4eae7a69aa29dec09, type: 3}
   feedback: {fileID: 0}
-  description: 
+  description: +2 bonus damage

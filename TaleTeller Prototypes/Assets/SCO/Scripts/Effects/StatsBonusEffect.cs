@@ -53,7 +53,10 @@ public class StatsBonusEffect : CardEffect
                     break;
                 case AffectedStats.BonusAttack:
                     if (target != null)
-                        Debug.Log("Character doesn't have this stat");
+                    {
+                        target.characterStats.baseAttackDamage += affectedStatistics[i].value;////FOR NOW
+                        target.feedback.UpdateText(target); ////FOR NOW
+                    }
                     else
                         GameManager.Instance.currentHero.bonusDamage += affectedStatistics[i].value;
                     break;

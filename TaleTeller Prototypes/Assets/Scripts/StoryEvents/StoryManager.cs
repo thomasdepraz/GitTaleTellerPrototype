@@ -55,16 +55,8 @@ public class StoryManager : MonoBehaviour
         {
             steps.Add(new List<CardData>());
         }
-
-        //Initialize first chapter
-        InitializeChapter();
     }
 
-    private void InitializeChapter()
-    {
-        
-
-    }
     public void StartNewChapter()
     {
         //Reset player position
@@ -77,16 +69,18 @@ public class StoryManager : MonoBehaviour
             steps[i].Clear();
         }*/
 
-        InitializeChapter();
 
         //Clear player temporary values
         GameManager.Instance.currentHero.bonusDamage = 0;
+
+        //Check for keyCards to update
+        CardManager.Instance.cardHand.UpdateKeyCardStatus();
 
         //Deal Cards
         CardManager.Instance.cardDeck.DealCards(CardManager.Instance.cardHand.maxHandSize - CardManager.Instance.cardHand.currentHand.Count);
 
         //Give creativity
-        //GameManager.Instance.creativityManager.creativity += 5;
+        GameManager.Instance.creativityManager.creativity += 5;
     }
     IEnumerator InitCards()
     {
@@ -96,6 +90,15 @@ public class StoryManager : MonoBehaviour
             int stepIndex = cardsToInit[0].index;
 
             cardsToInit.RemoveAt(0);//Remove the card to prevent stack overflow
+
+            if(card.keyCardActivated)
+            {
+                card.currentInterestCooldown = card.interestCooldown;//reset interest cooldown if needed
+            }
+            if(card.isKeyCard && !card.keyCardActivated)
+            {
+                card.keyCardActivated = true;//Activate Key Card
+            }
 
             //Init card graphics
             for (int i = 0; i < stepsContainers[stepIndex + 1].cardFeedbackContainers.Count; i++)
@@ -336,6 +339,22 @@ public class StoryManager : MonoBehaviour
 
                     default:
                         break;
+                }
+
+                //Reset key card to hand
+                if (currentCard.isKeyCard)
+                {
+                    clearList.Add(currentCard);
+
+                    if (currentCard.characterStats.baseLifePoints > 0)//Hardcoded key card character death
+                    {
+                        currentCard.feedback.UnloadCardFeedback(currentCard);//Unload graph
+                        CardManager.Instance.cardHand.InitCard(currentCard);
+                    } 
+                    else
+                    {
+                        print($"{currentCard.cardName} is dead");
+                    }
                 }
             }
 

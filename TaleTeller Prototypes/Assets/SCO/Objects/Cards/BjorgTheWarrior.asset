@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Bjorg The Warrior
   isKeyCard: 0
+  keyCardActivated: 0
   interestCooldown: 0
+  currentInterestCooldown: 0
   creativityBurn: 0
   type: 0
   characterBehaviour: 1
@@ -24,6 +26,9 @@ MonoBehaviour:
   trigger: 1
   creativityCost: 5
   effect: {fileID: 11400000, guid: 37ccd9cae2d518d45a6cce8d9257e49b, type: 2}
+  deadCardEffect: {fileID: 0}
   cardGraph: {fileID: 21300000, guid: b9236990daf0f2c488c53ef64bed9710, type: 3}
   feedback: {fileID: 0}
-  description: 
+  description: 'Discard 2 random cards
+
+'

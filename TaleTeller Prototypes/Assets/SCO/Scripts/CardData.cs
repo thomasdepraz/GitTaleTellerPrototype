@@ -28,7 +28,9 @@ public class CardData : ScriptableObject
 {
     public string cardName;
     public bool isKeyCard;
+    [HideInInspector] public bool keyCardActivated;
     public int interestCooldown;
+    [HideInInspector] public int currentInterestCooldown;
     public int creativityBurn;
     public CardType type;
     public CharacterBehaviour characterBehaviour;
@@ -37,6 +39,7 @@ public class CardData : ScriptableObject
     public CardEventTrigger trigger;
     public int creativityCost;
     public CardEffect effect;
+    public CardEffect deadCardEffect;
     public Sprite cardGraph;
     [HideInInspector] public CardFeedback feedback;
 
