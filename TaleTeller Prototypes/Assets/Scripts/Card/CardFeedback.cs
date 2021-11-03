@@ -8,9 +8,14 @@ public class CardFeedback : MonoBehaviour
 {
     [Header("References")]
     public Image feedbackImage;
+    public Image face;
     public GameObject statsContainer;
     public TextMeshProUGUI hpText;
     public TextMeshProUGUI attackText;
+
+    [Header("Sprites")]
+    public Sprite friendlyFace;
+    public Sprite ennemyFace;
 
     public void InitCardFeedback(CardData card)
     {
@@ -23,6 +28,12 @@ public class CardFeedback : MonoBehaviour
         {
             case CardType.Character:
                 statsContainer.SetActive(true);
+
+                if (card.characterBehaviour == CharacterBehaviour.Agressive)
+                    face.sprite = ennemyFace;
+                else
+                    face.sprite = friendlyFace; 
+
                 hpText.text = card.characterStats.baseLifePoints.ToString();
                 attackText.text = card.characterStats.baseAttackDamage.ToString();
                 break;

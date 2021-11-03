@@ -15,6 +15,7 @@ public class Card : MonoBehaviour
      , IPointerExitHandler
  
 {
+    [Header("References")]
     public RectTransform rectTransform;
     private Transform targetTransform;
     private Vector3 origin;
@@ -25,6 +26,9 @@ public class Card : MonoBehaviour
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI cardDescription;
     public TextMeshProUGUI cardCreativityCost;
+
+    public GameObject attackUI, healthUI, timerUI;
+    public TextMeshProUGUI attackText, healthText, timerText;
 
     delegate void UIEvent();
 
@@ -39,11 +43,12 @@ public class Card : MonoBehaviour
     public CanvasGroup canvasGroup;
     private bool isDragging;
 
+    /*
     public float x;
     public float y;
     public float z;
     public float w;
-
+    */
     private void Update()
     {
         if(isDragging && Input.GetMouseButtonUp(0))
@@ -65,6 +70,10 @@ public class Card : MonoBehaviour
     {
         this.data = data;
 
+        attackUI.SetActive(false);
+        healthUI.SetActive(false);
+        timerUI.SetActive(false);
+
         //Change effect if needed
         if (data.keyCardActivated)
         {
@@ -75,6 +84,22 @@ public class Card : MonoBehaviour
         basePosition = transform.position;
         data.currentInterestCooldown = data.interestCooldown;
         cardName.text = data.cardName;
+
+        if(data.type == CardType.Character)
+        {
+            attackUI.SetActive(true);
+            attackText.text = data.characterStats.baseAttackDamage.ToString();
+
+            healthUI.SetActive(true);
+            healthText.text = data.characterStats.baseLifePoints.ToString();
+        }
+
+        if(data.isKeyCard && data.keyCardActivated)
+        {
+            timerUI.SetActive(true);
+            timerText.text = data.currentInterestCooldown.ToString();
+        }
+
 
         if (data.effect == null)
             cardDescription.text = data.description;
@@ -92,21 +117,24 @@ public class Card : MonoBehaviour
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        origin = rectTransform.anchoredPosition;
-        targetTransform = CardManager.Instance.pointer.transform;
-        CardManager.Instance.holdingCard = true;
-        CardManager.Instance.currentCard = this;
-        transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
-        transform.SetAsLastSibling();
+        if(!GameManager.Instance.storyManager.isReadingStory)
+        {
+            origin = rectTransform.anchoredPosition;
+            targetTransform = CardManager.Instance.pointer.transform;
+            CardManager.Instance.holdingCard = true;
+            CardManager.Instance.currentCard = this;
+            transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
+            transform.SetAsLastSibling();
 
-        //new event methods
-        isDragging = true;
-        canvasGroup.blocksRaycasts = false;
-        rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
-        rectTransform.localScale = Vector3.one;
+            //new event methods
+            isDragging = true;
+            canvasGroup.blocksRaycasts = false;
+            rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
+            rectTransform.localScale = Vector3.one;
 
-        if (currentSlot != null)
-            currentSlot.canvasGroup.blocksRaycasts = true;
+            if (currentSlot != null)
+                currentSlot.canvasGroup.blocksRaycasts = true;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -116,6 +144,7 @@ public class Card : MonoBehaviour
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        rectTransform.rotation = new Quaternion(0, 0, 0, 0);
         //Enter open slot
         if (CardManager.Instance.currentHoveredSlot != null)
         {

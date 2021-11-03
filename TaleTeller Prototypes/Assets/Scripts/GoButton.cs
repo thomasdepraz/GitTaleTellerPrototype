@@ -66,7 +66,7 @@ public class GoButton : MonoBehaviour
     public void OnPointerDown(PointerEventData eventData)
     {
         image.color = onPressColor;
-        if(!board.IsEmpty())
+        if(!board.IsEmpty() && !GameManager.Instance.storyManager.isReadingStory)
             canClick = true;
     }
 

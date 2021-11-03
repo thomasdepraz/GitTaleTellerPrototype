@@ -31,6 +31,7 @@ public class StoryManager : MonoBehaviour
     [HideInInspector] public List<CardToInit> cardsToInit = new List<CardToInit>();
     public List<List<CardData>> steps = new List<List<CardData>>();
     public float heroMovingSpeed;
+    [HideInInspector] public bool isReadingStory;
 
 
     [Header("References")]
@@ -59,6 +60,29 @@ public class StoryManager : MonoBehaviour
 
     public void StartNewChapter()
     {
+        isReadingStory = false;
+
+        //Reset keyCards
+        List<CardData> clearList = new List<CardData>();
+        for (int i = 0; i < steps.Count; i++)
+        {
+            for (int j = 0; j < steps[i].Count; j++)
+            {
+                if(steps[i][j].isKeyCard)
+                {
+                    steps[i][j].feedback.UnloadCardFeedback(steps[i][j]);//Unload graph
+                    CardManager.Instance.cardHand.InitCard(steps[i][j]);
+                    clearList.Add(steps[i][j]);
+                }
+            }
+
+            for (int j = 0; j < clearList.Count; j++)
+            {
+                steps[i].Remove(clearList[j]);
+            }
+            clearList.Clear();
+        }
+
         //Reset player position
         heroUITransform.SetParent(stepsContainers[0].self);
         heroUITransform.SetAsLastSibling();
@@ -123,6 +147,8 @@ public class StoryManager : MonoBehaviour
     }
     IEnumerator ResolveSteps(int stepIndex)
     {
+
+
         if(stepIndex < 4)
         {
             //Make a fight list between characters
@@ -227,7 +253,9 @@ public class StoryManager : MonoBehaviour
                     fighterB.feedback.UnloadCardFeedback(fighterB);
                     fighterB.ResetCharacterStats();
                     steps[stepIndex].Remove(fighterB);
-                    CardManager.Instance.cardDeck.discardPile.Add(fighterB);
+
+                    if (!fighterB.isKeyCard) //HARDCODED
+                        CardManager.Instance.cardDeck.discardPile.Add(fighterB);
 
                     //Trigger on death event if need be
                     if (fighterB.trigger == CardEventTrigger.OnDeath)
@@ -241,7 +269,9 @@ public class StoryManager : MonoBehaviour
                     fighterA.feedback.UnloadCardFeedback(fighterA);
                     fighterA.ResetCharacterStats();
                     steps[stepIndex].Remove(fighterA);
-                    CardManager.Instance.cardDeck.discardPile.Add(fighterA);
+
+                    if(!fighterA.isKeyCard) //HARDCODED
+                        CardManager.Instance.cardDeck.discardPile.Add(fighterA);
 
                     //Trigger on death event if need be
                     if (fighterA.trigger == CardEventTrigger.OnDeath)
@@ -260,6 +290,7 @@ public class StoryManager : MonoBehaviour
     }
     public void StartStory()
     {
+        isReadingStory = true;
         StartCoroutine(InitCards());
     }
     public IEnumerator ReadStory()
@@ -278,6 +309,7 @@ public class StoryManager : MonoBehaviour
 
             for (int i = 0; i < steps[currentStepIndex].Count; i++)
             {
+                currentStepEventListIndex++;
                 CardData currentCard = steps[currentStepIndex][i];
 
                 //If needs be, trigger event
@@ -344,19 +376,12 @@ public class StoryManager : MonoBehaviour
                         break;
                 }
 
-                //Reset key card to hand
-                if (currentCard.isKeyCard)
+                //HARDCODE VICTORY
+                if (currentCard.isKeyCard && currentCard.cardName == "Vice The Assassin")
                 {
-                    clearList.Add(currentCard);
-
-                    if (currentCard.characterStats.baseLifePoints > 0)//Hardcoded key card character death
+                    if (currentCard.characterStats.baseLifePoints <= 0)//Hardcoded key card character death
                     {
-                        currentCard.feedback.UnloadCardFeedback(currentCard);//Unload graph
-                        CardManager.Instance.cardHand.InitCard(currentCard);
-                    } 
-                    else
-                    {
-                        print($"{currentCard.cardName} is dead");
+                        print($"{currentCard.cardName} is dead, YOU WIN");
                     }
                 }
             }
@@ -386,7 +411,6 @@ public class StoryManager : MonoBehaviour
     {
         if (currentStepEventListIndex < steps[currentStepIndex].Count - 1)
         {
-            currentStepEventListIndex++;
             //launch readstory
             StartCoroutine(ReadStory());
         }

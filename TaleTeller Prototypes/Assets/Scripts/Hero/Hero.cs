@@ -12,7 +12,6 @@ public class Hero : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI heroHpUI;
     public TextMeshProUGUI heroAttackUI;
-    public TextMeshProUGUI heroBonusDamageUI;
 
     //Private hero variables
     private int _maxLifePoints;
@@ -25,7 +24,7 @@ public class Hero : MonoBehaviour
         set 
         {
             _maxLifePoints = value;
-            heroHpUI.text = "HP : " +  lifePoints + "/" + value.ToString();
+            heroHpUI.text = lifePoints + "/" + value.ToString();
         }
     }
     [HideInInspector]public int lifePoints 
@@ -43,7 +42,7 @@ public class Hero : MonoBehaviour
                 _lifePoints = 0;
 
 
-            heroHpUI.text = "HP : " + lifePoints.ToString() + "/" + maxLifePoints;
+            heroHpUI.text = lifePoints.ToString() + "/" + maxLifePoints;
 
             //Different feedack if damage taken or if healed
             if(diff != 0 && diff!= maxLifePoints)
@@ -56,7 +55,7 @@ public class Hero : MonoBehaviour
         set
         {
             _attackDamage = value;
-            heroAttackUI.text = "Damage : " + value.ToString();
+            heroAttackUI.text = value.ToString();
         }
     }
     [HideInInspector]public int bonusDamage
@@ -65,7 +64,11 @@ public class Hero : MonoBehaviour
         set
         {
             _bonusDamage = value;
-            heroBonusDamageUI.text = "Bonus DMG : " + value.ToString();
+
+            if(value != 0)
+                heroAttackUI.text += " + " + value.ToString();
+            else
+                heroAttackUI.text = _attackDamage.ToString();
         }
     }
 
