@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12a75ffb8f67ef44e8129ce71028206e, type: 3}
   m_Name: StatsBonusEffect_Creativity
   m_EditorClassIdentifier: 
-  effectName: CreativityBuff
+  effectName: 'Deathrattle : +30 creativity'
   affectedStatistics:
   - affectedStat: 0
     value: 20

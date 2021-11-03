@@ -21,7 +21,9 @@ MonoBehaviour:
   type: 0
   characterBehaviour: 2
   characterStats:
+    maxLifePoints: 4
     baseLifePoints: 4
+    maxAttackDamage: 2
     baseAttackDamage: 2
   trigger: 2
   creativityCost: 5

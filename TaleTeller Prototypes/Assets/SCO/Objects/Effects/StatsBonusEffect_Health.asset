@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12a75ffb8f67ef44e8129ce71028206e, type: 3}
   m_Name: StatsBonusEffect_Health
   m_EditorClassIdentifier: 
-  effectName: HealthBuff
+  effectName: +2 HP
   affectedStatistics:
   - affectedStat: 1
     value: 2

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum CharacterBehaviour
@@ -22,7 +20,6 @@ public enum CardType
     Object, 
     Location
 }
-
 [CreateAssetMenu(fileName = "Card", menuName = "Data/Card", order = 0)]
 public class CardData : ScriptableObject
 {
@@ -45,5 +42,12 @@ public class CardData : ScriptableObject
 
     [TextArea(2, 3)]
     public string description;
+
+
+    public void ResetCharacterStats()
+    {
+        characterStats.baseLifePoints = characterStats.maxLifePoints;
+        characterStats.baseAttackDamage = characterStats.maxAttackDamage;
+    }
 
 }

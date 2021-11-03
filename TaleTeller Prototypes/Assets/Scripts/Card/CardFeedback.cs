@@ -45,7 +45,18 @@ public class CardFeedback : MonoBehaviour
 
     public void UpdateText(CardData card)
     {
+        if(card.characterStats.baseLifePoints < int.Parse(hpText.text))
+        {
+            StartCoroutine(DamageFeedback());
+        }
         hpText.text = card.characterStats.baseLifePoints.ToString();
         attackText.text = card.characterStats.baseAttackDamage.ToString();
+    }
+
+    public IEnumerator DamageFeedback()
+    {
+        feedbackImage.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        feedbackImage.color = Color.white;
     }
 }

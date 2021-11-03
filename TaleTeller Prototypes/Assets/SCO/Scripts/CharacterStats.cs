@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 [System.Serializable]
 public class CharacterStats
 {
+    public int maxLifePoints;
     public int baseLifePoints;
+    public int maxAttackDamage;
     public int baseAttackDamage;
 }

@@ -65,11 +65,22 @@ public class Card : MonoBehaviour
     {
         this.data = data;
 
+        //Change effect if needed
+        if (data.keyCardActivated)
+        {
+            data.effect = data.deadCardEffect;
+        }
+
         //load Data and activate gameobject
         basePosition = transform.position;
         data.currentInterestCooldown = data.interestCooldown;
         cardName.text = data.cardName;
-        cardDescription.text = data.description;
+
+        if (data.effect == null)
+            cardDescription.text = data.description;
+        else
+            cardDescription.text = data.effect.effectName;
+
         cardCreativityCost.text = data.creativityCost.ToString();
 
         gameObject.SetActive(true);

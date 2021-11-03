@@ -225,6 +225,7 @@ public class StoryManager : MonoBehaviour
                     //reset card and remove from story line
                     print($"{fighterB.cardName} is dead, returning the card to discard pile");
                     fighterB.feedback.UnloadCardFeedback(fighterB);
+                    fighterB.ResetCharacterStats();
                     steps[stepIndex].Remove(fighterB);
                     CardManager.Instance.cardDeck.discardPile.Add(fighterB);
 
@@ -238,6 +239,7 @@ public class StoryManager : MonoBehaviour
                     //reset card and remove from story line
                     print($"{fighterA.cardName} is dead, returning the card to discard pile");
                     fighterA.feedback.UnloadCardFeedback(fighterA);
+                    fighterA.ResetCharacterStats();
                     steps[stepIndex].Remove(fighterA);
                     CardManager.Instance.cardDeck.discardPile.Add(fighterA);
 
@@ -269,7 +271,7 @@ public class StoryManager : MonoBehaviour
         heroUITransform.SetAsLastSibling();
         
         //Make the hero go through every events and trigger enter and exit on every event
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         if (steps[currentStepIndex].Count > 0)
         {
             List<CardData> clearList = new List<CardData>();
@@ -303,6 +305,7 @@ public class StoryManager : MonoBehaviour
                             CardManager.Instance.cardDeck.discardPile.Add(currentCard);
 
                             currentCard.feedback.UnloadCardFeedback(currentCard);
+                            currentCard.ResetCharacterStats();
 
                             //Trigger on death event if need be
                             if (currentCard.trigger == CardEventTrigger.OnDeath)
@@ -363,10 +366,12 @@ public class StoryManager : MonoBehaviour
                 steps[currentStepIndex].Remove(clearList[i]);
             }
 
+            yield return new WaitForSeconds(1f);
             MoveToNextStep();//For now
         }
         else
         {
+            yield return new WaitForSeconds(1f);
             MoveToNextStep();
         }
         yield return null;
