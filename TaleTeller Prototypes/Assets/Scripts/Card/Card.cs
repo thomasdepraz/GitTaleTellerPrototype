@@ -42,13 +42,7 @@ public class Card : MonoBehaviour
     //Variables for dragging management
     public CanvasGroup canvasGroup;
     private bool isDragging;
-
-    /*
-    public float x;
-    public float y;
-    public float z;
-    public float w;
-    */
+    
     private void Update()
     {
         if(isDragging && Input.GetMouseButtonUp(0))
@@ -62,7 +56,7 @@ public class Card : MonoBehaviour
         {
             //follow 
             rectTransform.position = targetTransform.position;
-            rectTransform.rotation = Quaternion.Lerp(rectTransform.rotation, new Quaternion(CardManager.Instance.pointerRef.pointerDirection.y, CardManager.Instance.pointerRef.pointerDirection.x, 0, 1), Time.deltaTime);
+            rectTransform.rotation = Quaternion.Lerp(rectTransform.rotation, new Quaternion(CardManager.Instance.pointerRef.pointerDirection.y/3, -CardManager.Instance.pointerRef.pointerDirection.x/3, 0, 1), Time.deltaTime);
         }
     }
 
