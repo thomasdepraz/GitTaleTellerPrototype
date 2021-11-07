@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,8 +8,9 @@ public class Deck : MonoBehaviour
     public List<CardData> discardPile;
 
 
-    public void Start()
+    public IEnumerator Start()
     {
+        yield return new WaitForSeconds(2);
         for (int i = 0; i < cardDeck.Count; i++)
         {
             cardDeck[i] = Instantiate(cardDeck[i]);
@@ -33,9 +35,15 @@ public class Deck : MonoBehaviour
 
     public void DealCards(int count)
     {
+        StartCoroutine(Deal(count));
+    }
+
+    IEnumerator Deal(int count)
+    {
         for (int i = 0; i < count; i++)
         {
-            if(cardDeck.Count > 0)//Deal card while deck is not empty
+            yield return new WaitForSeconds(0.2f);
+            if (cardDeck.Count > 0)//Deal card while deck is not empty
             {
                 CardManager.Instance.cardHand.InitCard(cardDeck[0]);
                 cardDeck.RemoveAt(0);

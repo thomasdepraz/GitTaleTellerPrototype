@@ -71,7 +71,7 @@ public class StoryManager : MonoBehaviour
                 if(steps[i][j].isKeyCard)
                 {
                     steps[i][j].feedback.UnloadCardFeedback(steps[i][j]);//Unload graph
-                    CardManager.Instance.cardHand.InitCard(steps[i][j]);
+                    CardManager.Instance.cardHand.InitCard(steps[i][j], false);
                     clearList.Add(steps[i][j]);
                 }
             }

@@ -4,22 +4,55 @@ using UnityEngine;
 
 public class Hand : MonoBehaviour
 {
-
+    public RectTransform handTransform;
     public List<Card> hiddenHand = new List<Card>();
     public List<Card> currentHand = new List<Card>();
     public int maxHandSize;
 
-    public void InitCard(CardData data)
+    public void InitCard(CardData data, bool fromDeck = true)
     {
         for (int i = 0; i < hiddenHand.Count; i++)
         {
             if(!hiddenHand[i].gameObject.activeSelf)
             {
+                //Set parent and move
+                if (fromDeck)
+                {
+                    hiddenHand[i].rectTransform.SetParent(handTransform);
+                    MoveCard(hiddenHand[i],RandomPositionInRect(handTransform), true);
+                }
+
                 currentHand.Add(hiddenHand[i]);
                 hiddenHand[i].CardInit(data);
+
                 break;
             }
         }
+    }
+
+    public void MoveCard(Card card, Vector3 target, bool appear)
+    {
+        //if appear also make card scale go from small to normal and color from black to white
+        if(appear)
+        {
+            card.rectTransform.localScale = Vector3.zero;
+            card.selfImage.color = Color.black;
+
+            LeanTween.value(gameObject, card.selfImage.color, Color.white, 0.3f).setOnUpdate((Color val) => {card.selfImage.color = val;});
+            LeanTween.scale(card.rectTransform, Vector3.one, 0.5f).setEaseOutQuint();
+            LeanTween.move(card.rectTransform, target, 0.8f).setEaseOutQuint();
+        }
+    }
+
+    public Vector3 RandomPositionInRect(RectTransform transform)
+    {
+        Vector3 randomPos;
+        float height = transform.rect.height;
+        float width = transform.rect.width;
+
+        randomPos = new Vector3(Random.Range(-width/2, width/2), Random.Range(-height/4, height/4), 0);
+
+        return randomPos;
     }
 
     public void DiscardHand()

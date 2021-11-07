@@ -17,6 +17,7 @@ public class Card : MonoBehaviour
 {
     [Header("References")]
     public RectTransform rectTransform;
+    public Image selfImage;
     private Transform targetTransform;
     private Vector3 origin;
     private Vector3 basePosition;
@@ -106,7 +107,7 @@ public class Card : MonoBehaviour
         originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
 
         //add random rotation 
-        rectTransform.rotation = new Quaternion(0,0,Random.Range(-0.05f,0.05f),1);
+        rectTransform.rotation = new Quaternion(0,0,Random.Range(-0.1f,0.1f),1);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -234,6 +235,10 @@ public class Card : MonoBehaviour
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if(!LeanTween.isTweening(gameObject))
+            originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
+
+
         if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this && currentSlot!=null)
         {
             CardManager.Instance.hoveredCard = this;
