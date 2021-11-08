@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+[CustomEditor(typeof(CardData))]
+[CanEditMultipleObjects]
 public class CardDataEditor : Editor
 {
     public CardData data;
@@ -16,13 +18,23 @@ public class CardDataEditor : Editor
     {
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Card Name");
-        EditorGUILayout.TextField(data.cardName);
+        data.cardName = EditorGUILayout.TextField(data.cardName);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Is Key Card");
-        EditorGUILayout.Toggle(data.isKeyCard);
+        data.isKeyCard = EditorGUILayout.Toggle(data.isKeyCard);
         EditorGUILayout.EndHorizontal();
+
+        if(data.isKeyCard)
+        {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Interest Cooldown");
+            data.interestCooldown = EditorGUILayout.IntField(data.interestCooldown);
+            GUILayout.Label("Creativity Burn");
+            data.creativityBurn = EditorGUILayout.IntField(data.creativityBurn);
+            EditorGUILayout.EndHorizontal();
+        }
 
         EditorUtility.SetDirty(data);
     }

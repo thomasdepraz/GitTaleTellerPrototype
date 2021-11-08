@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12a75ffb8f67ef44e8129ce71028206e, type: 3}
   m_Name: StatsBonusEffect_BonusAttack
   m_EditorClassIdentifier: 
-  effectName: +3 Bonus Attack
+  effectName: +2 Bonus Attack
   affectedStatistics:
   - affectedStat: 3
-    value: 3
+    value: 2

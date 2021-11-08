@@ -15,4 +15,4 @@ MonoBehaviour:
   effectName: 'Deathrattle : +30 creativity'
   affectedStatistics:
   - affectedStat: 0
-    value: 20
+    value: 30

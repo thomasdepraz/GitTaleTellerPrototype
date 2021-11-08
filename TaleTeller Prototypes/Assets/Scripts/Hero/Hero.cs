@@ -66,7 +66,7 @@ public class Hero : MonoBehaviour
             _bonusDamage = value;
 
             if(value != 0)
-                heroAttackUI.text += " + " + value.ToString();
+                heroAttackUI.text = _attackDamage.ToString() + " + " + value.ToString();
             else
                 heroAttackUI.text = _attackDamage.ToString();
         }

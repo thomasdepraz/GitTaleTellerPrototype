@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: HeroData
   m_EditorClassIdentifier: 
   baseLifePoints: 20
-  baseAttackDamage: 2
+  baseAttackDamage: 1
