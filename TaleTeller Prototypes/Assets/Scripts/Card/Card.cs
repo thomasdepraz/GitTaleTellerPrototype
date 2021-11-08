@@ -31,6 +31,8 @@ public class Card : MonoBehaviour
     public GameObject attackUI, healthUI, timerUI;
     public TextMeshProUGUI attackText, healthText, timerText;
 
+    public RectTransform shadowTransform;
+
     delegate void UIEvent();
 
     List<RaycastResult> results = new List<RaycastResult>();
@@ -43,6 +45,7 @@ public class Card : MonoBehaviour
     //Variables for dragging management
     public CanvasGroup canvasGroup;
     private bool isDragging;
+    private bool canTween = true;
     
     private void Update()
     {
@@ -56,8 +59,10 @@ public class Card : MonoBehaviour
         if(isDragging)
         {
             //follow 
+            Debug.DrawLine(rectTransform.position, rectTransform.position + (Vector3)direction, Color.red);
+            shadowTransform.rotation = new Quaternion(0,0,0,1);
             rectTransform.position = targetTransform.position;
-            rectTransform.rotation = Quaternion.Lerp(rectTransform.rotation, new Quaternion(CardManager.Instance.pointerRef.pointerDirection.y/3, -CardManager.Instance.pointerRef.pointerDirection.x/3, 0, 1), Time.deltaTime);
+            rectTransform.rotation = Quaternion.Lerp(rectTransform.rotation, new Quaternion(CardManager.Instance.pointerRef.pointerDirection.y, -CardManager.Instance.pointerRef.pointerDirection.x, 0, 1), Time.deltaTime);
         }
     }
 
@@ -110,22 +115,26 @@ public class Card : MonoBehaviour
         rectTransform.rotation = new Quaternion(0,0,Random.Range(-0.1f,0.1f),1);
     }
 
+    Vector2 direction;
     public void OnBeginDrag(PointerEventData eventData)
     {
         if(!GameManager.Instance.storyManager.isReadingStory)
         {
+            LeanTween.cancel(gameObject);
+
             origin = rectTransform.anchoredPosition;
             targetTransform = CardManager.Instance.pointer.transform;
             CardManager.Instance.holdingCard = true;
             CardManager.Instance.currentCard = this;
-            transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
+            //transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
             transform.SetAsLastSibling();
 
             //new event methods
             isDragging = true;
             canvasGroup.blocksRaycasts = false;
-            rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
-            rectTransform.localScale = Vector3.one;
+
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            //rectTransform.localScale = Vector3.one;
 
             if (currentSlot != null)
                 currentSlot.canvasGroup.blocksRaycasts = true;
@@ -139,7 +148,10 @@ public class Card : MonoBehaviour
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        canTween = false;
         rectTransform.rotation = new Quaternion(0, 0, 0, 0);
+        rectTransform.localScale = Vector3.one;
+
         //Enter open slot
         if (CardManager.Instance.currentHoveredSlot != null)
         {
@@ -161,9 +173,18 @@ public class Card : MonoBehaviour
         else
         {
             targetTransform = null;
-            rectTransform.anchoredPosition = origin;
-            if(currentSlot!=null)
-                currentSlot.canvasGroup.blocksRaycasts = false;
+            CardManager.Instance.holdingCard = false;
+            originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
+            rectTransform.anchoredPosition = originPosition;
+
+            if (currentSlot!=null)
+            {
+                currentSlot.currentPlacedCard = null;
+                currentSlot.canvasGroup.blocksRaycasts = true;
+                currentSlot = null;
+            }
+
+
         }
 
         //Swap with other card
@@ -243,8 +264,10 @@ public class Card : MonoBehaviour
         {
             CardManager.Instance.hoveredCard = this;
         }
-        else if(transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard)//Check if in hand
+        else if(transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard && canTween)//Check if in hand
         {
+            canTween = false;
+
             //Reset card rotation
             rectTransform.rotation = new Quaternion(0,0,0,0);
 
@@ -259,25 +282,28 @@ public class Card : MonoBehaviour
             rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0);
             rectTransform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-            LeanTween.move(rectTransform, rectTransform.anchoredPosition + new Vector2(0, 10f), 0.5f).setEaseOutSine();
+            //LeanTween.move(rectTransform, rectTransform.anchoredPosition + new Vector2(0, 10f), 0.5f).setEaseOutSine();
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        canTween = true;
         if(CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
         {
             CardManager.Instance.hoveredCard = null; 
         }
-        else if (transform.parent == CardManager.Instance.cardHandContainer.transform)//Check if in hand
+        else if (transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard)//Check if in hand
         {
             //Scale up and bring to front;
             LeanTween.cancel(gameObject);
             rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
             rectTransform.localScale = Vector3.one;
             LeanTween.move(rectTransform, originPosition, 0.5f).setEaseOutSine();
-            //rectTransform.anchoredPosition = originPosition;
-            transform.SetSiblingIndex(siblingIndex);
+            rectTransform.anchoredPosition = originPosition;
+
+            if(!isDragging)
+                transform.SetSiblingIndex(siblingIndex);
         }
     }
 

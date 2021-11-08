@@ -6,6 +6,7 @@ public class Pointer : MonoBehaviour
 {
     public Camera mainCamera;
     public Vector2 screenSize;
+    public Transform self;
 
     public List<RaycastResult> results = new List<RaycastResult>();
     public Vector3 pointerDirection;

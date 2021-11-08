@@ -11,6 +11,7 @@ public class GameManager : Singleton<GameManager>
     public GameObject goButton;
     public Image fadePanel;
     public GameObject gameOverText;
+    public Pointer pointer;
 
     public void Awake()
     {
