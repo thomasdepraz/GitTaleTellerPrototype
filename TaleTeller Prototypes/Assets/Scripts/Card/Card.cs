@@ -129,6 +129,8 @@ public class Card : MonoBehaviour
             //transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
             transform.SetAsLastSibling();
 
+            shadowTransform.gameObject.SetActive(true);
+
             //new event methods
             isDragging = true;
             canvasGroup.blocksRaycasts = false;
@@ -151,6 +153,7 @@ public class Card : MonoBehaviour
         canTween = false;
         rectTransform.rotation = new Quaternion(0, 0, 0, 0);
         rectTransform.localScale = Vector3.one;
+        shadowTransform.gameObject.SetActive(false);
 
         //Enter open slot
         if (CardManager.Instance.currentHoveredSlot != null)
@@ -282,7 +285,8 @@ public class Card : MonoBehaviour
             rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0);
             rectTransform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-            //LeanTween.move(rectTransform, rectTransform.anchoredPosition + new Vector2(0, 10f), 0.5f).setEaseOutSine();
+            LeanTween.move(rectTransform, rectTransform.anchoredPosition + new Vector2(0, 10f), 0.5f).setEaseOutSine();
+            shadowTransform.gameObject.SetActive(true);
         }
     }
 
@@ -291,11 +295,12 @@ public class Card : MonoBehaviour
         canTween = true;
         if(CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
         {
-            CardManager.Instance.hoveredCard = null; 
+            CardManager.Instance.hoveredCard = null;
         }
         else if (transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard)//Check if in hand
         {
             //Scale up and bring to front;
+            shadowTransform.gameObject.SetActive(false);
             LeanTween.cancel(gameObject);
             rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
             rectTransform.localScale = Vector3.one;
