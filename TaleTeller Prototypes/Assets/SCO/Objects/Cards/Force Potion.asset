@@ -32,3 +32,6 @@ MonoBehaviour:
   cardGraph: {fileID: 21300000, guid: 99c66634f5cf62f4eae7a69aa29dec09, type: 3}
   feedback: {fileID: 0}
   description: +2 bonus damage
+  effects: []
+  references:
+    version: 1

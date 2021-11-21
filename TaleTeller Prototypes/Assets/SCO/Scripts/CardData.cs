@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum CharacterBehaviour
@@ -42,6 +43,10 @@ public class CardData : ScriptableObject
 
     [TextArea(2, 3)]
     public string description;
+
+    //TEMP
+    [SerializeReference]
+    public List<Effect> effects = new List<Effect>();
 
 
     public void ResetCharacterStats()

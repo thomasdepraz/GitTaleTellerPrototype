@@ -32,3 +32,6 @@ MonoBehaviour:
   cardGraph: {fileID: 21300000, guid: 477068da7b0424e40a49dfeca0d99051, type: 3}
   feedback: {fileID: 0}
   description: 'Deathrattle : +30 Creativity'
+  effects: []
+  references:
+    version: 1

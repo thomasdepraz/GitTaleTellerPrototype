@@ -34,3 +34,25 @@ MonoBehaviour:
   description: '
 
 '
+  effects:
+  - id: 0
+  - id: 1
+  - id: 2
+  references:
+    version: 1
+    00000000:
+      type: {class: BonusEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effectName: 
+        bonusValue: 
+    00000001:
+      type: {class: GoldMalusEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effectName: 
+        malusValue: 
+        goldMalusValue: 
+    00000002:
+      type: {class: DCEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effectName: 
+        discardValue: 
