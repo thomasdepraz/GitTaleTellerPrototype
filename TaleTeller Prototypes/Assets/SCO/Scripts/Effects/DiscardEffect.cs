@@ -10,7 +10,7 @@ public class DiscardEffect : CardEffect
     public override void TriggerEffect(CardData target = null)
     {
         //Make a list of the cards in hand
-        List<Card> cardsInHand = new List<Card>();
+        List<CardContainer> cardsInHand = new List<CardContainer>();
         for (int i = 0; i < CardManager.Instance.cardHand.currentHand.Count; i++)
         {
             cardsInHand.Add(CardManager.Instance.cardHand.currentHand[i]);

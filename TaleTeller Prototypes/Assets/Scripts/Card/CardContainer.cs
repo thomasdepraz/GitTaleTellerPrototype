@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Card : MonoBehaviour
+public class CardContainer : MonoBehaviour
      , IBeginDragHandler
      , IEndDragHandler
      , IDragHandler

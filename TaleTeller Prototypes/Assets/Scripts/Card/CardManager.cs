@@ -13,8 +13,8 @@ public class CardManager : Singleton<CardManager>
     public DraftBoard board;
     [HideInInspector] public DraftSlot currentHoveredSlot;
     [HideInInspector] public bool holdingCard;
-    [HideInInspector] public Card currentCard;
-    [HideInInspector] public Card hoveredCard;
+    [HideInInspector] public CardContainer currentCard;
+    [HideInInspector] public CardContainer hoveredCard;
 
     public GameObject movingCardsContainer;
     public GameObject cardHandContainer;

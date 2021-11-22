@@ -5,8 +5,8 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
     public RectTransform handTransform;
-    public List<Card> hiddenHand = new List<Card>();
-    public List<Card> currentHand = new List<Card>();
+    public List<CardContainer> hiddenHand = new List<CardContainer>();
+    public List<CardContainer> currentHand = new List<CardContainer>();
     public int maxHandSize;
 
     public void InitCard(CardData data, bool fromDeck = true)
@@ -40,7 +40,7 @@ public class Hand : MonoBehaviour
         }
     }
 
-    public void DiscardCardFromHand(Card card)
+    public void DiscardCardFromHand(CardContainer card)
     {
         CardManager.Instance.cardDeck.discardPile.Add(card.data);
         card.ResetCard();
@@ -49,7 +49,7 @@ public class Hand : MonoBehaviour
 
 
     #region Visuals
-    public void MoveCard(Card card, Vector3 target, bool appear)
+    public void MoveCard(CardContainer card, Vector3 target, bool appear)
     {
         //if appear also make card scale go from small to normal and color from black to white
         if(appear)

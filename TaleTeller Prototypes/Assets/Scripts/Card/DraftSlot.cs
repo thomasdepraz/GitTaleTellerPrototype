@@ -8,8 +8,8 @@ public class DraftSlot : MonoBehaviour
      , IPointerEnterHandler
      , IPointerExitHandler
 {
-    Card _currentPlacedCard;
-    public Card currentPlacedCard
+    CardContainer _currentPlacedCard;
+    public CardContainer currentPlacedCard
     { 
         get => _currentPlacedCard;
         set

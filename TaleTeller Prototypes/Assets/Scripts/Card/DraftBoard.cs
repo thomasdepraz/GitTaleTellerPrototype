@@ -58,7 +58,7 @@ public class DraftBoard : MonoBehaviour
         return true;
     }
 
-    public void DiscardCardFromBoard(Card card)
+    public void DiscardCardFromBoard(CardContainer card)
     {
         CardManager.Instance.cardDeck.discardPile.Add(card.data);
         card.ResetCard();
