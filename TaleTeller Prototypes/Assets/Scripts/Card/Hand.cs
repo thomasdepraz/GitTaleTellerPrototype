@@ -30,6 +30,25 @@ public class Hand : MonoBehaviour
         }
     }
 
+    public void DiscardAllHand()
+    {
+        int cachedCount = currentHand.Count;
+        for (int i = 0; i < cachedCount; i++)
+        {
+            CardManager.Instance.cardDeck.discardPile.Add(currentHand[0].data);
+            currentHand[0].ResetCard();
+        }
+    }
+
+    public void DiscardCardFromHand(Card card)
+    {
+        CardManager.Instance.cardDeck.discardPile.Add(card.data);
+        card.ResetCard();
+    }
+
+
+
+    #region Visuals
     public void MoveCard(Card card, Vector3 target, bool appear)
     {
         //if appear also make card scale go from small to normal and color from black to white
@@ -55,30 +74,21 @@ public class Hand : MonoBehaviour
         return randomPos;
     }
 
-    public void DiscardHand()
-    {
-        int cachedCount = currentHand.Count;
-        for (int i = 0; i < cachedCount; i++)
-        {
-            CardManager.Instance.cardDeck.discardPile.Add(currentHand[0].data);
-            currentHand[0].ResetCard();   
-        }
-    }
-
     public void UpdateKeyCardStatus()
     {
         for (int i = 0; i < currentHand.Count; i++)
         {
-            if(currentHand[i].data.keyCardActivated)
+            if (currentHand[i].data.keyCardActivated)
             {
-                if(currentHand[i].data.currentInterestCooldown <= 0)
+                if (currentHand[i].data.currentInterestCooldown <= 0)
                 {
                     GameManager.Instance.creativityManager.creativity -= currentHand[i].data.creativityBurn;//Affect creativity
-                }    
+                }
                 currentHand[i].data.currentInterestCooldown -= 1;//Lower cooldown
                 currentHand[i].timerText.text = currentHand[i].data.currentInterestCooldown.ToString();
             }
         }
     }
 
+    #endregion
 }

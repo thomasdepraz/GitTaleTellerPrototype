@@ -3282,7 +3282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898891, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3067991426093898892, guid: 0b3bf05659173f445aac7e8d54cae49c, type: 3}
       propertyPath: m_Pivot.x
@@ -3896,6 +3896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardDeck: {fileID: 7480972}
   cardHand: {fileID: 227346439}
+  board: {fileID: 1954824164}
   currentHoveredSlot: {fileID: 0}
   holdingCard: 0
   currentCard: {fileID: 0}

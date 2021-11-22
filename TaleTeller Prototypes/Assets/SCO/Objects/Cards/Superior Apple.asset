@@ -32,3 +32,6 @@ MonoBehaviour:
   cardGraph: {fileID: 21300000, guid: e3bbec142d488b241a7f9cb64f49aad9, type: 3}
   feedback: {fileID: 0}
   description: +2 HP
+  effects: []
+  references:
+    version: 1

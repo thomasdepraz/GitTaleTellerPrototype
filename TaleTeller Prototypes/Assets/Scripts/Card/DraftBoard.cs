@@ -23,7 +23,7 @@ public class DraftBoard : MonoBehaviour
             }
         }
 
-        ClearDraft();
+        //ClearDraft();
     }
 
     public void ClearDraft()
@@ -58,5 +58,14 @@ public class DraftBoard : MonoBehaviour
         return true;
     }
 
+    public void DiscardCardFromBoard(Card card)
+    {
+        CardManager.Instance.cardDeck.discardPile.Add(card.data);
+        card.ResetCard();
+
+        //remove from board list
+        card.currentSlot.currentPlacedCard = null;
+        card.currentSlot = null;
+    }
 
 }

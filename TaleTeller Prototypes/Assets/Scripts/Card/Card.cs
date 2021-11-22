@@ -6,11 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Card : MonoBehaviour
-     , IPointerUpHandler
      , IBeginDragHandler
      , IEndDragHandler
      , IDragHandler
-     , IPointerDownHandler
      , IPointerEnterHandler
      , IPointerExitHandler
  
@@ -35,10 +33,6 @@ public class Card : MonoBehaviour
 
     delegate void UIEvent();
 
-    List<RaycastResult> results = new List<RaycastResult>();
-    List<GameObject> cachedObjects = new List<GameObject>();
-    bool pointerDown;
-    PointerEventData currentData;
     private Vector2 originPosition;
     private int siblingIndex;
 
@@ -53,13 +47,10 @@ public class Card : MonoBehaviour
         {
             isDragging = false;
             canvasGroup.blocksRaycasts = true;
-            CardManager.Instance.holdingCard = false;
-            CardManager.Instance.currentCard = null;
         }
         if(isDragging)
         {
             //follow 
-            Debug.DrawLine(rectTransform.position, rectTransform.position + (Vector3)direction, Color.red);
             shadowTransform.rotation = new Quaternion(0,0,0,1);
             rectTransform.position = targetTransform.position;
             rectTransform.rotation = Quaternion.Lerp(rectTransform.rotation, new Quaternion(CardManager.Instance.pointerRef.pointerDirection.y, -CardManager.Instance.pointerRef.pointerDirection.x, 0, 1), Time.deltaTime);
@@ -115,164 +106,173 @@ public class Card : MonoBehaviour
         rectTransform.rotation = new Quaternion(0,0,Random.Range(-0.1f,0.1f),1);
     }
 
-    Vector2 direction;
+    public void OnDrag(PointerEventData eventData)
+    {
+        //Allows OnBeginDrag and OnEndDrag.
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if(!GameManager.Instance.storyManager.isReadingStory)
+        if(!GameManager.Instance.storyManager.isReadingStory)//Can only interact with cards if story isnt reading
         {
+            #region Tweening + Graphics
             LeanTween.cancel(gameObject);
 
             origin = rectTransform.anchoredPosition;
             targetTransform = CardManager.Instance.pointer.transform;
-            CardManager.Instance.holdingCard = true;
-            CardManager.Instance.currentCard = this;
-            //transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
             transform.SetAsLastSibling();
-
             shadowTransform.gameObject.SetActive(true);
-
-            //new event methods
-            isDragging = true;
-            canvasGroup.blocksRaycasts = false;
-
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
             //rectTransform.localScale = Vector3.one;
+
+            #endregion
+
+            CardManager.Instance.holdingCard = true;
+            CardManager.Instance.currentCard = this;
+
+            //Trigger movement detection
+            isDragging = true;
+            canvasGroup.blocksRaycasts = false;
 
             if (currentSlot != null)
                 currentSlot.canvasGroup.blocksRaycasts = true;
         }
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        //rectTransform.position = targetTransform.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        #region Tweening + Graphics
         canTween = false;
         rectTransform.rotation = new Quaternion(0, 0, 0, 0);
         rectTransform.localScale = Vector3.one;
         shadowTransform.gameObject.SetActive(false);
+        #endregion
 
-        //Enter open slot
-        if (CardManager.Instance.currentHoveredSlot != null)
+        //If hovers, swap card, else drop in or out of slot
+        if(CardManager.Instance.hoveredCard != null)
         {
-            if (currentSlot != null)
-            {
-                currentSlot.currentPlacedCard = null;
-                currentSlot = null;
-            }
-
-            CardManager.Instance.currentHoveredSlot.currentPlacedCard = this;
-            currentSlot = CardManager.Instance.currentHoveredSlot;
-            currentSlot.canvasGroup.blocksRaycasts = false;
-            rectTransform.position = CardManager.Instance.currentHoveredSlot.transform.position;
-
-            //For now add cost to creativity
-            GameManager.Instance.creativityManager.currentBoardCreativityCost += data.creativityCost;
-
-        }
-        else
-        {
-            targetTransform = null;
-            CardManager.Instance.holdingCard = false;
-            originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
-            rectTransform.anchoredPosition = originPosition;
-
-            if (currentSlot!=null)
-            {
-                currentSlot.currentPlacedCard = null;
-                currentSlot.canvasGroup.blocksRaycasts = true;
-                currentSlot = null;
-            }
-
-
-        }
-
-        //Swap with other card
-        if(CardManager.Instance.hoveredCard!=null)
-        {
+            #region Swap Card
             //Swap cards from the board
-            if(currentSlot!=null)
+            if (currentSlot != null) //If card in board
             {
-                if(CardManager.Instance.hoveredCard.currentSlot!=null)
+                if (CardManager.Instance.hoveredCard.currentSlot != null) //if other card in board
                 {
                     DraftSlot tempSlot = CardManager.Instance.hoveredCard.currentSlot;
-            
+
                     CardManager.Instance.hoveredCard.currentSlot = currentSlot;
                     CardManager.Instance.hoveredCard.currentSlot.currentPlacedCard = CardManager.Instance.hoveredCard;
                     CardManager.Instance.hoveredCard.rectTransform.position = CardManager.Instance.hoveredCard.currentSlot.transform.position;
                     CardManager.Instance.hoveredCard.currentSlot.canvasGroup.blocksRaycasts = false;
 
-
                     tempSlot.currentPlacedCard = this;
                     currentSlot = tempSlot;
                     rectTransform.position = currentSlot.transform.position;
                 }
-                else
+                else //if other card in hand
                 {
                     DraftSlot tempSlot = currentSlot;
-
                     tempSlot.currentPlacedCard = CardManager.Instance.hoveredCard;
                     CardManager.Instance.hoveredCard.currentSlot = tempSlot;
 
                     currentSlot = null;
 
-                    rectTransform.position = CardManager.Instance.hoveredCard.rectTransform.position;
+
+                    rectTransform.anchoredPosition = CardManager.Instance.hoveredCard.originPosition;
+
                     CardManager.Instance.hoveredCard.rectTransform.position = tempSlot.transform.position;
-                    CardManager.Instance.hoveredCard.transform.SetParent(CardManager.Instance.movingCardsContainer.transform);
                     transform.SetParent(CardManager.Instance.cardHandContainer.transform);
                 }
-                    CardManager.Instance.hoveredCard = null;
-
-            }
-            else
-            {
-                DraftSlot tempSlot = CardManager.Instance.hoveredCard.currentSlot;
-
-                tempSlot.currentPlacedCard = this;
-                CardManager.Instance.hoveredCard.currentSlot = null;
-                currentSlot = tempSlot;
-                CardManager.Instance.hoveredCard.rectTransform.position = rectTransform.position;
-                CardManager.Instance.hoveredCard.transform.SetParent(CardManager.Instance.cardHandContainer.transform);
-                rectTransform.position = tempSlot.transform.position;
 
                 CardManager.Instance.hoveredCard = null;
             }
+            else //if card in hand
+            {
+                if (CardManager.Instance.hoveredCard.currentSlot != null)//If card other card in board
+                {
+                    DraftSlot tempSlot = CardManager.Instance.hoveredCard.currentSlot;
+                    tempSlot.currentPlacedCard = this;
+                    currentSlot = tempSlot;
+
+                    CardManager.Instance.hoveredCard.currentSlot = null;
+
+                    CardManager.Instance.hoveredCard.rectTransform.anchoredPosition = originPosition;
+                    CardManager.Instance.hoveredCard.transform.SetParent(CardManager.Instance.cardHandContainer.transform); //set back to hand
+
+                    rectTransform.position = tempSlot.transform.position;
+                }
+                else //if other card in hand
+                {
+                    Vector3 position = CardManager.Instance.hoveredCard.rectTransform.anchoredPosition;
+
+                    CardManager.Instance.hoveredCard.rectTransform.anchoredPosition = originPosition;
+                    rectTransform.anchoredPosition = position;
+                }
+                    
+                CardManager.Instance.hoveredCard = null;
+            }
+            #endregion
         }
+        else
+        {
+            #region Drop in/out slot
+            //Drop In Slot
+            if (CardManager.Instance.currentHoveredSlot != null)
+            {
+                if (currentSlot != null)
+                {
+                    currentSlot.currentPlacedCard = null;
+                    currentSlot = null;
+                }
+
+                CardManager.Instance.currentHoveredSlot.currentPlacedCard = this;
+                currentSlot = CardManager.Instance.currentHoveredSlot;
+                currentSlot.canvasGroup.blocksRaycasts = false;
+                rectTransform.position = CardManager.Instance.currentHoveredSlot.transform.position;
+
+                //For now add cost to creativity
+                GameManager.Instance.creativityManager.currentBoardCreativityCost += data.creativityCost;
+            }
+            else //Drop Out Slot
+            {
+                targetTransform = null;
+                CardManager.Instance.holdingCard = false;
+                originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
+                rectTransform.anchoredPosition = originPosition;
+
+                if (currentSlot != null)//Remove card from board !! Add list system
+                {
+                    currentSlot.currentPlacedCard = null;
+                    currentSlot.canvasGroup.blocksRaycasts = true;
+                    currentSlot = null;
+                }
+            }
+            #endregion
+        }
+
+
         CardManager.Instance.currentHoveredSlot = null;
         CardManager.Instance.holdingCard = false;
         CardManager.Instance.currentCard = null;
     }
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        pointerDown = true;
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        pointerDown = false;
-        cachedObjects.Clear();
-    }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(!LeanTween.isTweening(gameObject))
-            originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
-
-
-        if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this && currentSlot!=null)
+        if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
         {
+            Debug.Log("Dragging over card while holding");
             CardManager.Instance.hoveredCard = this;
         }
-        else if(transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard && canTween)//Check if in hand
+
+        #region Tweening
+        if (!LeanTween.isTweening(gameObject))
+            originPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y);
+
+        if (transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard && canTween)//Check if in hand
         {
             canTween = false;
 
             //Reset card rotation
-            rectTransform.rotation = new Quaternion(0,0,0,0);
+            rectTransform.rotation = new Quaternion(0, 0, 0, 0);
 
             //Scale up and bring to front;
             LeanTween.cancel(gameObject);
@@ -285,31 +285,36 @@ public class Card : MonoBehaviour
             rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0);
             rectTransform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-            LeanTween.move(rectTransform, rectTransform.anchoredPosition + new Vector2(0, 10f), 0.5f).setEaseOutSine();
+            //LeanTween.move(rectTransform, rectTransform.anchoredPosition + new Vector2(0, 10f), 0.5f).setEaseOutSine();
             shadowTransform.gameObject.SetActive(true);
         }
+        #endregion
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        canTween = true;
         if(CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
         {
             CardManager.Instance.hoveredCard = null;
         }
-        else if (transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard)//Check if in hand
+
+        #region Tweening
+        canTween = true;
+        if (transform.parent == CardManager.Instance.cardHandContainer.transform && !CardManager.Instance.holdingCard)//Check if in hand
         {
-            //Scale up and bring to front;
+            //Scale down 
             shadowTransform.gameObject.SetActive(false);
             LeanTween.cancel(gameObject);
             rectTransform.pivot = new Vector2(rectTransform.pivot.x, 0.5f);
             rectTransform.localScale = Vector3.one;
-            LeanTween.move(rectTransform, originPosition, 0.5f).setEaseOutSine();
-            rectTransform.anchoredPosition = originPosition;
 
-            if(!isDragging)
+            //LeanTween.move(rectTransform, originPosition, 0.5f).setEaseOutSine();
+            //rectTransform.anchoredPosition = originPosition;
+
+            if (!isDragging)
                 transform.SetSiblingIndex(siblingIndex);
         }
+        #endregion
     }
 
     public void ResetCard()
@@ -321,14 +326,12 @@ public class Card : MonoBehaviour
 
         data = null;
         currentSlot = null;
-        cachedObjects.Clear();
 
         rectTransform.position = basePosition;
 
+        //Reset to hidden hand
         CardManager.Instance.cardHand.currentHand.Remove(this);
-
         gameObject.SetActive(false);
-
         transform.SetParent(CardManager.Instance.cardHandContainer.transform);
     }
 

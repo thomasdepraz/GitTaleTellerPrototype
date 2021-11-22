@@ -52,7 +52,6 @@ public class CardDataEditor : Editor
         }
 
         serializedObject.ApplyModifiedProperties();
-        EditorUtility.SetDirty(script);
     }
 
     public void AddMenuItem(GenericMenu menu, string path, Type type)

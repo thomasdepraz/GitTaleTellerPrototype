@@ -48,7 +48,6 @@ public static class EffectManager
                 result.Add(temp[i]);
             }
         }
-
         return result;
     }
 

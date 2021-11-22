@@ -10,7 +10,8 @@ public class CardManager : Singleton<CardManager>
 
     public Deck cardDeck;
     public Hand cardHand;
-    [HideInInspector]public DraftSlot currentHoveredSlot;
+    public DraftBoard board;
+    [HideInInspector] public DraftSlot currentHoveredSlot;
     [HideInInspector] public bool holdingCard;
     [HideInInspector] public Card currentCard;
     [HideInInspector] public Card hoveredCard;

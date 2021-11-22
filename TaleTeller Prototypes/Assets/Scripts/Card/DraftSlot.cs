@@ -32,7 +32,6 @@ public class DraftSlot : MonoBehaviour
     public Sprite defaultSprite;
     public Sprite hoveredSprite;
 
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (CardManager.Instance.holdingCard)
