@@ -74,6 +74,8 @@ public class CardContainer : MonoBehaviour
         //Init characterValues
         data.characterStats.Initialize();
 
+        if (data.cardType != null) data.cardType.InitType(data);
+
 
         //load Data and activate gameobject
         basePosition = transform.position;
@@ -174,17 +176,35 @@ public class CardContainer : MonoBehaviour
                 }
                 else //if other card in hand
                 {
-                    DraftSlot tempSlot = currentSlot;
-                    tempSlot.currentPlacedCard = CardManager.Instance.hoveredCard;
-                    CardManager.Instance.hoveredCard.currentSlot = tempSlot;
+                    //If you have enough mana to swap cards
+                    int manaDifference = CardManager.Instance.hoveredCard.data.creativityCost - data.creativityCost;
+                    if (CardManager.Instance.manaSystem.CanUseCard(manaDifference))
+                    {
+                        DraftSlot tempSlot = currentSlot;
+                        tempSlot.currentPlacedCard = CardManager.Instance.hoveredCard;
+                        CardManager.Instance.hoveredCard.currentSlot = tempSlot;
 
-                    currentSlot = null;
+                        currentSlot = null;
 
 
-                    rectTransform.anchoredPosition = CardManager.Instance.hoveredCard.originPosition;
+                        rectTransform.anchoredPosition = CardManager.Instance.hoveredCard.originPosition;
 
-                    CardManager.Instance.hoveredCard.rectTransform.position = tempSlot.transform.position;
-                    transform.SetParent(CardManager.Instance.cardHandContainer.transform);
+                        CardManager.Instance.hoveredCard.rectTransform.position = tempSlot.transform.position;
+                        transform.SetParent(CardManager.Instance.cardHandContainer.transform);
+
+                        //ApplyManaDiff
+                        if (manaDifference > 0) CardManager.Instance.manaSystem.LoseMana(manaDifference);
+                        else if (manaDifference < 0) CardManager.Instance.manaSystem.GainMana(Mathf.Abs(manaDifference));
+
+                    }
+                    else
+                    {
+                        //reset card position
+                        rectTransform.anchoredPosition = originPosition;
+                        canTween = true; //temp ?
+                        Debug.Log("Not enough mana");
+                    }
+
                 }
 
                 CardManager.Instance.hoveredCard = null;
@@ -193,16 +213,34 @@ public class CardContainer : MonoBehaviour
             {
                 if (CardManager.Instance.hoveredCard.currentSlot != null)//If card other card in board
                 {
-                    DraftSlot tempSlot = CardManager.Instance.hoveredCard.currentSlot;
-                    tempSlot.currentPlacedCard = this;
-                    currentSlot = tempSlot;
+                    //If you have enough mana to swap cards
+                    int manaDifference = data.creativityCost - CardManager.Instance.hoveredCard.data.creativityCost;
 
-                    CardManager.Instance.hoveredCard.currentSlot = null;
+                    if (CardManager.Instance.manaSystem.CanUseCard(manaDifference))
+                    {
+                        DraftSlot tempSlot = CardManager.Instance.hoveredCard.currentSlot;
+                        tempSlot.currentPlacedCard = this;
+                        currentSlot = tempSlot;
 
-                    CardManager.Instance.hoveredCard.rectTransform.anchoredPosition = originPosition;
-                    CardManager.Instance.hoveredCard.transform.SetParent(CardManager.Instance.cardHandContainer.transform); //set back to hand
+                        CardManager.Instance.hoveredCard.currentSlot = null;
 
-                    rectTransform.position = tempSlot.transform.position;
+                        CardManager.Instance.hoveredCard.rectTransform.anchoredPosition = originPosition;
+                        CardManager.Instance.hoveredCard.transform.SetParent(CardManager.Instance.cardHandContainer.transform); //set back to hand
+
+                        rectTransform.position = tempSlot.transform.position;
+
+                        //ApplyManaDiff
+                        if (manaDifference > 0) CardManager.Instance.manaSystem.LoseMana(manaDifference);
+                        else if (manaDifference < 0) CardManager.Instance.manaSystem.GainMana(Mathf.Abs(manaDifference));
+
+                    }
+                    else
+                    {
+                        //reset card position
+                        rectTransform.anchoredPosition = originPosition;
+                        canTween = true; //temp ?
+                        Debug.Log("Not enough mana");
+                    }
                 }
                 else //if other card in hand
                 {
@@ -222,19 +260,31 @@ public class CardContainer : MonoBehaviour
             //Drop In Slot
             if (CardManager.Instance.currentHoveredSlot != null)
             {
-                if (currentSlot != null)
+                //if you have enough man else abort and reset card
+                if (CardManager.Instance.manaSystem.CanUseCard(data.creativityCost) && CardManager.Instance.currentHoveredSlot != currentSlot)
                 {
-                    currentSlot.currentPlacedCard = null;
-                    currentSlot = null;
+                    if (currentSlot != null)
+                    {
+                        currentSlot.currentPlacedCard = null;
+                        currentSlot = null;
+                    }
+
+                    CardManager.Instance.currentHoveredSlot.currentPlacedCard = this;
+                    currentSlot = CardManager.Instance.currentHoveredSlot;
+                    currentSlot.canvasGroup.blocksRaycasts = false;
+                    rectTransform.position = CardManager.Instance.currentHoveredSlot.transform.position;
+
+                    CardManager.Instance.manaSystem.LoseMana(data.creativityCost);
                 }
+                else
+                {
+                    //reset card position
+                    rectTransform.anchoredPosition = originPosition;
+                    canTween = true; //temp ?
 
-                CardManager.Instance.currentHoveredSlot.currentPlacedCard = this;
-                currentSlot = CardManager.Instance.currentHoveredSlot;
-                currentSlot.canvasGroup.blocksRaycasts = false;
-                rectTransform.position = CardManager.Instance.currentHoveredSlot.transform.position;
-
-                //For now add cost to creativity
-                GameManager.Instance.creativityManager.currentBoardCreativityCost += data.creativityCost;
+                    if (CardManager.Instance.currentHoveredSlot == currentSlot) Debug.Log("SameSlot");
+                    else Debug.Log("Not enough mana");
+                }
             }
             else //Drop Out Slot
             {
@@ -249,6 +299,10 @@ public class CardContainer : MonoBehaviour
                     currentSlot.canvasGroup.blocksRaycasts = true;
                     currentSlot = null;
                 }
+
+                //Refill Mana
+                CardManager.Instance.manaSystem.GainMana(data.creativityCost);
+
             }
             #endregion
         }
@@ -263,7 +317,6 @@ public class CardContainer : MonoBehaviour
     {
         if (CardManager.Instance.holdingCard && CardManager.Instance.currentCard != this)
         {
-            Debug.Log("Dragging over card while holding");
             CardManager.Instance.hoveredCard = this;
         }
 

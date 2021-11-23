@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LocationType : CardTypes
 {
-    public override void InitType()
+    public override void InitType(CardData data)
     {
 
     }

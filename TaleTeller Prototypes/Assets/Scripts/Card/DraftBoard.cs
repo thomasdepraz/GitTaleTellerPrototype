@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,10 @@ public class DraftBoard : MonoBehaviour
 {
     public List<DraftSlot> slots = new List<DraftSlot>();
 
+    #region OldLogic
     public void CreateStory()
     {
+        
         for (int i = 0; i < slots.Count; i++)
         {
             //Create event based on card data
@@ -22,8 +25,6 @@ public class DraftBoard : MonoBehaviour
                 GameManager.Instance.creativityManager.currentBoardCreativityCost = 0;//reset board cost
             }
         }
-
-        //ClearDraft();
     }
 
     public void ClearDraft()
@@ -56,6 +57,41 @@ public class DraftBoard : MonoBehaviour
                 return false;
         }
         return true;
+    }
+    #endregion
+
+    [HideInInspector] public List<IEnumerator> onStartQueue = new List<IEnumerator>();
+    public void InitBoard()
+    {
+        //Pour chaque slot, on appelle l'event OnStartStory
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if(slots[i].currentPlacedCard != null)
+            {
+                if (slots[i].currentPlacedCard.data.onStartEvent != null)
+                {
+                    slots[i].currentPlacedCard.data.onStartEvent();
+                }
+            }
+        }
+        //Normally have here a bg list of routines to run through
+        StartCoroutine(onStartQueue[0]);
+    }
+    public void UpdateOnStartQueue()
+    {
+        //Unqueue
+        onStartQueue.RemoveAt(0);
+
+        //if still event continue
+        if(onStartQueue.Count >0)
+        {
+            StartCoroutine(onStartQueue[0]);
+        }
+        //else stop and keep going with reading
+        else
+        {
+           
+        }
     }
 
     public void DiscardCardFromBoard(CardContainer card)

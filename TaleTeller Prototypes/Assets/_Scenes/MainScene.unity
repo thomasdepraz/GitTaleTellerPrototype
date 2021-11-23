@@ -189,14 +189,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3526dfe191ec5604ead4be1c188e7929, type: 2}
   - {fileID: 11400000, guid: 659610380ad0ae849808252a6e8548a0, type: 2}
   - {fileID: 11400000, guid: 659610380ad0ae849808252a6e8548a0, type: 2}
-  - {fileID: 11400000, guid: 659610380ad0ae849808252a6e8548a0, type: 2}
-  - {fileID: 11400000, guid: 659610380ad0ae849808252a6e8548a0, type: 2}
+  - {fileID: 11400000, guid: d2d5ea40aa2fee948bc499947409e06b, type: 2}
+  - {fileID: 11400000, guid: d2d5ea40aa2fee948bc499947409e06b, type: 2}
   - {fileID: 11400000, guid: c58fe9b2d84fdd746836602e38abd1e4, type: 2}
   - {fileID: 11400000, guid: aad38a88060dacf428ae2fb8b46534aa, type: 2}
   - {fileID: 11400000, guid: aad38a88060dacf428ae2fb8b46534aa, type: 2}
   - {fileID: 11400000, guid: aad38a88060dacf428ae2fb8b46534aa, type: 2}
-  - {fileID: 11400000, guid: aad38a88060dacf428ae2fb8b46534aa, type: 2}
-  - {fileID: 11400000, guid: 2f9c83283db5add49901a3e0673b6ba7, type: 2}
+  - {fileID: 11400000, guid: d2d5ea40aa2fee948bc499947409e06b, type: 2}
+  - {fileID: 11400000, guid: d2d5ea40aa2fee948bc499947409e06b, type: 2}
   discardPile: []
 --- !u!1001 &16544982
 PrefabInstance:
@@ -755,7 +755,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.3, y: 0}
   m_AnchorMax: {x: 0.7, y: 1}
-  m_AnchoredPosition: {x: 821.04004, y: -8.030296}
+  m_AnchoredPosition: {x: 821.04, y: -8.0303}
   m_SizeDelta: {x: 692.704, y: 16.060547}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &227346439
@@ -3855,6 +3855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1242236472}
   - component: {fileID: 1242236473}
+  - component: {fileID: 1242236474}
   m_Layer: 5
   m_Name: CardZone
   m_TagString: Untagged
@@ -3898,15 +3899,28 @@ MonoBehaviour:
   cardDeck: {fileID: 7480972}
   cardHand: {fileID: 227346439}
   board: {fileID: 1954824164}
+  manaSystem: {fileID: 1242236474}
   currentHoveredSlot: {fileID: 0}
   holdingCard: 0
   currentCard: {fileID: 0}
   hoveredCard: {fileID: 0}
-  movingCardsContainer: {fileID: 909166351}
   cardHandContainer: {fileID: 227346437}
   pointerRef: {fileID: 710431144}
   pointer: {fileID: 710431143}
-  inputModule: {fileID: 567353437}
+--- !u!114 &1242236474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242236471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba97327e9151ee47bcc2d8153277479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxMana: 6
+  currentMana: 0
 --- !u!1 &1266171740
 GameObject:
   m_ObjectHideFlags: 0

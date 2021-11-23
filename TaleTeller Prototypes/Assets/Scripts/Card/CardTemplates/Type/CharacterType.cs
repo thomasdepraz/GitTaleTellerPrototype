@@ -55,8 +55,29 @@ public class CharacterType : CardTypes
         }
     }
 
-    public override void InitType()
+    public override void InitType(CardData data)
     {
         maxUseCount = useCount;
+        data.onStartEvent += OnStart;
     }
+
+    public void OnStart()
+    {
+        //add to OnStartQueue
+        CardManager.Instance.board.onStartQueue.Add(OnStartRoutine());
+    }
+
+    public IEnumerator OnStartRoutine()
+    {
+        Debug.Log("Il");
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("se passe des trucs");
+
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Unqueue
+        CardManager.Instance.board.UpdateOnStartQueue();
+    }
+
 }

@@ -53,6 +53,11 @@ public class CardData : ScriptableObject
     public CardTypes cardType;
 
 
+    //Events specification
+    public delegate void BoardEvent();
+    public BoardEvent onStartEvent;
+
+
     public void ResetCharacterStats()
     {
         characterStats.Reset();

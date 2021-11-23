@@ -5,5 +5,5 @@ using UnityEngine;
 [System.Serializable]
 public abstract class CardTypes : ScriptableObject
 {
-    public abstract void InitType();
+    public abstract void InitType(CardData card);
 }

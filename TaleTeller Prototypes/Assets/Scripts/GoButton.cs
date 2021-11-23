@@ -75,7 +75,8 @@ public class GoButton : MonoBehaviour
         //Launch draft board methods
         if(canClick)
         {
-            board.CreateStory();
+            //board.CreateStory();
+            board.InitBoard();
         }
 
         image.color = Color.white;
