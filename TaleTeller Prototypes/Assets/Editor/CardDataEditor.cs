@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(CardData))]
+//[CustomEditor(typeof(CardData))]
 public class CardDataEditor : Editor
 {
     public CardData script;

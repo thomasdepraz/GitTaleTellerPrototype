@@ -71,6 +71,10 @@ public class CardContainer : MonoBehaviour
             data.effect = data.deadCardEffect;
         }
 
+        //Init characterValues
+        data.characterStats.Initialize();
+
+
         //load Data and activate gameobject
         basePosition = transform.position;
         data.currentInterestCooldown = data.interestCooldown;

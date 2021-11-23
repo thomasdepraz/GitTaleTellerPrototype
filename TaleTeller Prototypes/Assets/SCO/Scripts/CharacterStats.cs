@@ -1,8 +1,20 @@
 [System.Serializable]
-public class CharacterStats
+public struct CharacterStats
 {
-    public int maxLifePoints;
+    private int maxLifePoints;
     public int baseLifePoints;
-    public int maxAttackDamage;
+    private int maxAttackDamage;
     public int baseAttackDamage;
+
+    public void Reset()
+    {
+        baseLifePoints = maxLifePoints;
+        baseAttackDamage = maxAttackDamage;
+    }
+
+    public void Initialize()
+    {
+        maxAttackDamage = baseLifePoints;
+        maxLifePoints = baseLifePoints;
+    }
 }

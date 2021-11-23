@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,14 +46,16 @@ public class CardData : ScriptableObject
     public string description;
 
     //TEMP
-    [SerializeReference]
+    [Expandable]
     public List<Effect> effects = new List<Effect>();
+
+    [Expandable]
+    public CardTypes cardType;
 
 
     public void ResetCharacterStats()
     {
-        characterStats.baseLifePoints = characterStats.maxLifePoints;
-        characterStats.baseAttackDamage = characterStats.maxAttackDamage;
+        characterStats.Reset();
     }
 
 }

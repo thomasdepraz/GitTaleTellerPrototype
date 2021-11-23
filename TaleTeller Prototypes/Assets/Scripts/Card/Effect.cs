@@ -5,31 +5,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-[System.Serializable]
-public class Effect
+public class Effect : ScriptableObject
 {
     public string effectName;
 }
 
-[System.Serializable]
-public class DCEffect : Effect
+public class CardMalus : Effect
+{
+
+}
+
+public class DCEffect : CardMalus
 {
     public string discardValue;
 }
 
+public class ExhaustEffect : CardMalus
+{
+
+}
 
 public class BonusEffect : Effect
 {
     public string bonusValue;
 }
 
-[System.Serializable]
 public class MalusEffect : Effect
 {
     public string malusValue;
 }
 
-[System.Serializable]
 public class GoldMalusEffect : MalusEffect
 {
     public string goldMalusValue;
