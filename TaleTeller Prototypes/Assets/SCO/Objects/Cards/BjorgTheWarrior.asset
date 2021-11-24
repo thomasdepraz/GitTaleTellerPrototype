@@ -21,9 +21,7 @@ MonoBehaviour:
   type: 0
   characterBehaviour: 1
   characterStats:
-    maxLifePoints: 6
     baseLifePoints: 6
-    maxAttackDamage: 2
     baseAttackDamage: 2
   trigger: 0
   creativityCost: 7
@@ -31,21 +29,9 @@ MonoBehaviour:
   deadCardEffect: {fileID: 0}
   cardGraph: {fileID: 21300000, guid: b9236990daf0f2c488c53ef64bed9710, type: 3}
   feedback: {fileID: 0}
+  currentContainer: {fileID: 0}
   description: '
 
 '
-  effects:
-  - id: 0
-  - id: 1
-  references:
-    version: 1
-    00000000:
-      type: {class: DCEffect, ns: , asm: Assembly-CSharp}
-      data:
-        effectName: Lesgo
-        discardValue: 0
-    00000001:
-      type: {class: BonusEffect, ns: , asm: Assembly-CSharp}
-      data:
-        effectName: djkfh
-        bonusValue: 12
+  effects: []
+  cardType: {fileID: 0}

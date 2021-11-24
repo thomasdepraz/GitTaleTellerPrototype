@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CharacterType : CardTypes
 {
+    public CardData data;
+
     public enum CharacterFightingRange
     {
         None, Left, Right, LeftAndRight
@@ -57,17 +59,21 @@ public class CharacterType : CardTypes
 
     public override void InitType(CardData data)
     {
+        this.data = data;
+
         maxUseCount = useCount;
         data.onStartEvent += OnStart;
+        data.onEndEvent += OnEnd;
     }
 
+    #region Events
     public void OnStart()
     {
         //add to OnStartQueue
         CardManager.Instance.board.onStartQueue.Add(OnStartRoutine());
     }
 
-    public IEnumerator OnStartRoutine()
+    private IEnumerator OnStartRoutine()
     {
         Debug.Log("Il");
         yield return new WaitForSeconds(0.5f);
@@ -80,4 +86,18 @@ public class CharacterType : CardTypes
         CardManager.Instance.board.UpdateOnStartQueue();
     }
 
+    public void OnEnd()
+    {
+        CardManager.Instance.board.onEndQueue.Add(OnEndRoutine());   
+    }
+    private IEnumerator OnEndRoutine()
+    {
+        CardManager.Instance.board.DiscardCardFromBoard(data.currentContainer);
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Unqueue
+        CardManager.Instance.board.UpdateOnEndQueue();
+    }
+    #endregion
 }

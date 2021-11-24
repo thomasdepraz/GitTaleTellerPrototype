@@ -13,7 +13,8 @@ public class Deck : MonoBehaviour
         yield return new WaitForSeconds(2);
         for (int i = 0; i < cardDeck.Count; i++)
         {
-            cardDeck[i] = Instantiate(cardDeck[i]);
+            cardDeck[i] = cardDeck[i].InitializeData(cardDeck[i]);
+            
         }
 
         ShuffleCards(cardDeck);

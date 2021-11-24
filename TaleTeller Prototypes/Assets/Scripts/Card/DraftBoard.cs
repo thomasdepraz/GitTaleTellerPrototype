@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DraftBoard : MonoBehaviour
 {
+    public int numberOfSlots;
     public List<DraftSlot> slots = new List<DraftSlot>();
 
     //Event Queues
@@ -12,6 +13,8 @@ public class DraftBoard : MonoBehaviour
     [HideInInspector] public List<IEnumerator> onEndQueue = new List<IEnumerator>();
     [HideInInspector] public List<IEnumerator> cardEffectQueue = new List<IEnumerator>();
     [HideInInspector] public List<IEnumerator> cardEventQueue = new List<IEnumerator>();
+
+    private int currentSlot = 0;
 
     #region OldLogic
     public void CreateStory()
@@ -66,6 +69,8 @@ public class DraftBoard : MonoBehaviour
     }
     #endregion
 
+
+    #region StoryBegin
     public void InitBoard()
     {
         //Pour chaque slot, on appelle l'event OnStartStory
@@ -80,33 +85,191 @@ public class DraftBoard : MonoBehaviour
             }
         }
         //Normally have here a bg list of routines to run through
-        StartCoroutine(onStartQueue[0]);
+        if(onStartQueue.Count > 0)
+        {
+            StartCoroutine(onStartQueue[0]);
+        }
+        else
+        {
+            ProcessStory();
+        }
     }
-    public void UpdateOnStartQueue()
+    public void UpdateOnStartQueue() //TODO : Add pause management
     {
         //Unqueue
         onStartQueue.RemoveAt(0);
 
         //if still event continue
-        if(onStartQueue.Count >0)
+        if(onStartQueue.Count > 0)
         {
             StartCoroutine(onStartQueue[0]);
         }
-        //else stop and keep going with reading
+        //else stop and start processing story
         else
         {
-           
+            ProcessStory();
         }
     }
+    #endregion
+
+    #region ProcessStory
+    public void ProcessStory()
+    {
+        //Move to first step
+        MoveToNextStep();
+    }
+
+    void ReadStoryStep(int slotIndex)//Actual resolving of events
+    {
+        currentSlot = slotIndex;
+        Debug.Log($"Reading slot number {slotIndex}");
+
+        if(slots[slotIndex - 1].currentPlacedCard != null)
+        {
+            //Make a list of effect event and card type related events by trigger the enter card event
+            if(slots[slotIndex-1].currentPlacedCard.data.onEnterEvent !=null)
+                slots[slotIndex-1].currentPlacedCard.data.onEnterEvent();
+
+            //go through them if any
+            if(cardEffectQueue.Count > 0)
+            {
+                StartCoroutine(cardEffectQueue[0]);
+            }
+            else
+            {
+                if(cardEventQueue.Count > 0)
+                {
+                    StartCoroutine(cardEventQueue[0]);
+                }
+                else
+                {
+                    //At the end keep going
+                    Debug.Log("NO Events");
+                    MoveToNextStep();
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("No card on slot");
+            MoveToNextStep();
+        }
+    }
+
+    void MoveToNextStep()//Move the focus from one step to another thus resolving it's events (Move the player too)
+    {
+        //Start coroutine for moving that calls for TriggerRead
+        StartCoroutine(tempMove(currentSlot));
+    }
+    public void UpdateStoryQueue()
+    {
+        if(cardEffectQueue.Count > 0)//If you havent processed all effect events, continue
+        {
+            //Unqueue
+            cardEffectQueue.RemoveAt(0);
+            
+            if(cardEffectQueue.Count > 0)
+            {
+                StartCoroutine(cardEffectQueue[0]);
+            }
+            else //When all effect are done, you can process with the cardTypes specific events such as fights
+            {
+                if (cardEventQueue.Count > 0) StartCoroutine(cardEventQueue[0]);
+                else MoveToNextStep();
+            }
+        }
+        else if(cardEventQueue.Count > 0)
+        {
+            //Unqueue
+            cardEventQueue.RemoveAt(0);
+            if(cardEventQueue.Count > 0)
+            {
+                StartCoroutine(cardEventQueue[0]);
+            }
+            else //You have gone through every effect and card related events congrats you can proceed
+            {
+                MoveToNextStep();
+            }
+        }
+    }
+
+    void TriggerRead(int currentSlotIndex)
+    {
+        //if all done read story step
+        if (currentSlotIndex < numberOfSlots)
+        {
+            currentSlotIndex++;
+            ReadStoryStep(currentSlotIndex);
+        }
+        else //end of story
+        {
+            CloseBoard();
+        }
+    }
+
+    IEnumerator tempMove(int index)//Temp coroutine to test movement
+    {
+        Debug.Log("Start Moving");
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("Stopped Moving");
+        yield return new WaitForSeconds(0.2f);
+
+        TriggerRead(index);
+    }
+    #endregion
+
+    #region StoryEnd
+    public void CloseBoard()
+    {
+        currentSlot = 0;//reset slot pointer
+
+        //Pour chaque slot on appelle l'event OnEndStory
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if(slots[i].currentPlacedCard != null)
+            {
+                if(slots[i].currentPlacedCard.data.onEndEvent != null)
+                {
+                    slots[i].currentPlacedCard.data.onEndEvent();
+                }
+            }
+        }
+        if(onEndQueue.Count >0)
+        {
+            //Run through the resulting list
+            StartCoroutine(onEndQueue[0]);
+        }
+        else
+        {
+            Debug.Log("Turn ended");
+        }
+    }
+    public void UpdateOnEndQueue() //TODO : Add pause management
+    {
+        //Unqueue
+        onEndQueue.RemoveAt(0);
+
+        //if still event continue
+        if (onEndQueue.Count > 0)
+        {
+            StartCoroutine(onEndQueue[0]);
+        }
+        //else stop and end turn 
+        else
+        {
+            Debug.Log("Turn ended");
+        }
+    }
+    #endregion
 
     public void DiscardCardFromBoard(CardContainer card)
     {
         CardManager.Instance.cardDeck.discardPile.Add(card.data);
-        card.ResetCard();
-
+        
         //remove from board list
         card.currentSlot.currentPlacedCard = null;
-        card.currentSlot = null;
+
+        card.ResetCard();
     }
 
 }

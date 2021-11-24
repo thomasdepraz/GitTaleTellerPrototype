@@ -20,8 +20,8 @@ public class CardContainer : MonoBehaviour
     private Vector3 origin;
     private Vector3 basePosition;
 
-    [HideInInspector] public DraftSlot currentSlot;
-    [HideInInspector] public CardData data;
+    public DraftSlot currentSlot;
+    public CardData data;
     public TextMeshProUGUI cardName;
     public TextMeshProUGUI cardDescription;
     public TextMeshProUGUI cardCreativityCost;
@@ -65,6 +65,8 @@ public class CardContainer : MonoBehaviour
         healthUI.SetActive(false);
         timerUI.SetActive(false);
 
+        data.currentContainer = this;
+
         //Change effect if needed
         if (data.keyCardActivated)
         {
@@ -74,7 +76,12 @@ public class CardContainer : MonoBehaviour
         //Init characterValues
         data.characterStats.Initialize();
 
-        if (data.cardType != null) data.cardType.InitType(data);
+        if (data.cardType != null)
+        {
+            //data.cardType = Instantiate(data.cardType);
+            data.cardType.InitType(data);
+        }   
+
 
 
         //load Data and activate gameobject
@@ -376,11 +383,12 @@ public class CardContainer : MonoBehaviour
 
     public void ResetCard()
     {
-        //unload Data and activate gameobject
+        //unload Data and deactivate gameobject
         cardName.text = string.Empty;
         cardDescription.text = string.Empty;
         cardCreativityCost.text = string.Empty;
 
+        data.currentContainer = null;
         data = null;
         currentSlot = null;
 
@@ -391,5 +399,4 @@ public class CardContainer : MonoBehaviour
         gameObject.SetActive(false);
         transform.SetParent(CardManager.Instance.cardHandContainer.transform);
     }
-
 }
