@@ -7,6 +7,12 @@ public class DraftBoard : MonoBehaviour
 {
     public List<DraftSlot> slots = new List<DraftSlot>();
 
+    //Event Queues
+    [HideInInspector] public List<IEnumerator> onStartQueue = new List<IEnumerator>();
+    [HideInInspector] public List<IEnumerator> onEndQueue = new List<IEnumerator>();
+    [HideInInspector] public List<IEnumerator> cardEffectQueue = new List<IEnumerator>();
+    [HideInInspector] public List<IEnumerator> cardEventQueue = new List<IEnumerator>();
+
     #region OldLogic
     public void CreateStory()
     {
@@ -60,7 +66,6 @@ public class DraftBoard : MonoBehaviour
     }
     #endregion
 
-    [HideInInspector] public List<IEnumerator> onStartQueue = new List<IEnumerator>();
     public void InitBoard()
     {
         //Pour chaque slot, on appelle l'event OnStartStory
