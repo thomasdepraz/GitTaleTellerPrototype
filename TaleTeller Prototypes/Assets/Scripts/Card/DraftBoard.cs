@@ -242,6 +242,7 @@ public class DraftBoard : MonoBehaviour
         else
         {
             Debug.Log("Turn ended");
+            CardManager.Instance.manaSystem.RefillMana(); //TEMPORARY (it'll be elsewhere)
         }
     }
     public void UpdateOnEndQueue() //TODO : Add pause management
@@ -258,11 +259,12 @@ public class DraftBoard : MonoBehaviour
         else
         {
             Debug.Log("Turn ended");
+            CardManager.Instance.manaSystem.RefillMana(); //TEMPORARY (it'll be elsewhere)
         }
     }
     #endregion
 
-    public void DiscardCardFromBoard(CardContainer card)
+    public void DiscardCardFromBoard(CardContainer card, ref bool actionEnded)
     {
         CardManager.Instance.cardDeck.discardPile.Add(card.data);
         
@@ -270,6 +272,52 @@ public class DraftBoard : MonoBehaviour
         card.currentSlot.currentPlacedCard = null;
 
         card.ResetCard();
+
+        actionEnded = true;
+    }
+
+    public void ReturnCardToHand(CardContainer card, bool canPushOverCard, ref bool actionEnded)
+    {
+        if(canPushOverCard)
+        {
+            if(CardManager.Instance.cardHand.currentHand.Count == CardManager.Instance.cardHand.maxHandSize)//if max cards in hand make the player select a card
+            {
+                //MAKE the player pick a card and discard it
+
+                //FOR NOW
+                DiscardCardFromBoard(card, ref actionEnded);
+            }
+            else//just return card to hand
+            {
+                //remove from board list
+                card.currentSlot.currentPlacedCard = null;
+                card.currentSlot.canvasGroup.blocksRaycasts = true;
+                card.currentSlot = null;
+
+                //use method from deck to move cardBack to hand
+                CardManager.Instance.cardHand.MoveCard(card, CardManager.Instance.cardHand.RandomPositionInRect(CardManager.Instance.cardHand.handTransform), false);
+                actionEnded = true; 
+            }
+        }
+        else
+        {
+            if (CardManager.Instance.cardHand.currentHand.Count == CardManager.Instance.cardHand.maxHandSize + 1)//if max cards in hand discard
+            {
+                DiscardCardFromBoard(card, ref actionEnded);
+            }
+            else//just return card to hand
+            {
+                //remove from board list
+                card.currentSlot.currentPlacedCard = null;
+                card.currentSlot.canvasGroup.blocksRaycasts = true;
+                card.currentSlot = null;
+
+
+                //use method from deck to move cardBack to hand
+                CardManager.Instance.cardHand.MoveCard(card, CardManager.Instance.cardHand.RandomPositionInRect(CardManager.Instance.cardHand.handTransform), false);
+                actionEnded = true;
+            }
+        }
     }
 
 }

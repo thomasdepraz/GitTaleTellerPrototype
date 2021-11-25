@@ -76,13 +76,6 @@ public class CardContainer : MonoBehaviour
         //Init characterValues
         data.characterStats.Initialize();
 
-        if (data.cardType != null)
-        {
-            //data.cardType = Instantiate(data.cardType);
-            data.cardType.InitType(data);
-        }   
-
-
 
         //load Data and activate gameobject
         basePosition = transform.position;

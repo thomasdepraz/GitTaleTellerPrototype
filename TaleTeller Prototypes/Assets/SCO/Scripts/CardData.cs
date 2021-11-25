@@ -61,12 +61,17 @@ public class CardData : ScriptableObject
     public BoardEvent onEndEvent;
     public BoardEvent onEnterEvent;
 
-    public CardData InitializeData(CardData data)
+    //This is how a base card will be initialized (It's meant to be overwritten)
+    public virtual CardData InitializeData(CardData data)
     {
         data = Instantiate(data);//make data an instance of itself
 
         //Instantiate other scriptables objects
-        if(data.cardType!= null) data.cardType = Instantiate(data.cardType);
+        if(data.cardType!= null)
+        {
+            data.cardType = Instantiate(data.cardType);
+            data.cardType.InitType(data);//<--Watch out, subscribing to events can happen in here
+        }
 
         for (int i = 0; i < data.effects.Count; i++)
         {
@@ -75,13 +80,24 @@ public class CardData : ScriptableObject
 
 
         //Write logic to determine how the card subscribe to the events
+        if(data.cardType == null)//All the events that i subscribe in here must be the one that are overidden if I have a certain cardType
+        {
+            //Subscribe to onEnterEvent so it at least processes the events if any
+            data.onEnterEvent += OnEnter;
 
-        //Subscribe to onEnterEvent
-        data.onEnterEvent += OnEnter;
+            //Subscribe to OnEnd to Discard
+            data.onEndEvent += OnEnd;
+
+        }
+
+
 
         return data;
     }
 
+    #region Generic Events
+
+    #region OnEnter (Effect Trigger)
     public void OnEnter()
     {
         //add effects to board manager list
@@ -99,6 +115,26 @@ public class CardData : ScriptableObject
         yield return null;
         CardManager.Instance.board.UpdateStoryQueue();
     }
+    #endregion
+
+    #region OnEnd (Discard)
+    public void OnEnd()
+    {
+        CardManager.Instance.board.onEndQueue.Add(DiscardRoutine());
+    }
+    private IEnumerator DiscardRoutine()
+    {
+        bool routineEnded = false;
+        CardManager.Instance.board.DiscardCardFromBoard(currentContainer, ref routineEnded);
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Unqueue
+        CardManager.Instance.board.UpdateOnEndQueue();
+    }
+    #endregion
+
+    #endregion
 
     public void ResetCharacterStats()
     {

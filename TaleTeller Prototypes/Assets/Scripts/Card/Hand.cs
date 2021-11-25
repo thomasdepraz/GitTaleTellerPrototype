@@ -46,8 +46,6 @@ public class Hand : MonoBehaviour
         card.ResetCard();
     }
 
-
-
     #region Visuals
     public void MoveCard(CardContainer card, Vector3 target, bool appear)
     {
@@ -59,6 +57,10 @@ public class Hand : MonoBehaviour
 
             LeanTween.value(gameObject, card.selfImage.color, Color.white, 0.3f).setOnUpdate((Color val) => {card.selfImage.color = val;});
             LeanTween.scale(card.rectTransform, Vector3.one, 0.5f).setEaseOutQuint();
+            LeanTween.move(card.rectTransform, target, 0.8f).setEaseOutQuint();
+        }
+        else
+        {
             LeanTween.move(card.rectTransform, target, 0.8f).setEaseOutQuint();
         }
     }
@@ -89,6 +91,5 @@ public class Hand : MonoBehaviour
             }
         }
     }
-
     #endregion
 }

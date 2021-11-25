@@ -6,7 +6,7 @@ public class ManaSystem : MonoBehaviour
 {
     [Header("Data")]
     public int maxMana;
-    [HideInInspector] public int currentMana;
+    public int currentMana;
 
     // Start is called before the first frame update
     void Start()
